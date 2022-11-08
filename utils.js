@@ -41,5 +41,23 @@ module.exports = {
         });
     
         return isNumberFound;
+    },
+
+    prettyPrintGame : function(game) {
+        let output = '';
+        let line = '\n--------------------------------------\n';
+        
+        for (let i = 0; i < defs.gameLength; i++) {
+            output += line;
+            for (let j = 0; j < defs.gameLength; j ++) {
+                output += `| ${game.rows[i][j].value ? game.rows[i][j].value : ' '} `;
+            }
+
+            output += '|';
+        }
+
+        output += line;
+
+        return output;
     }
 }

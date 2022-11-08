@@ -10,6 +10,8 @@ const operationLog = [];
 function main() {
     const game = GameParser.parseGame(sampleGames.game1);
 
+    console.log(utils.prettyPrintGame(game));
+
     let foundLinearGuess = false;
     do {
 
@@ -29,6 +31,8 @@ function main() {
     } while (foundLinearGuess)
    
     console.log('operation log', operationLog);
+
+    console.log(utils.prettyPrintGame(game));
     
 }
 
