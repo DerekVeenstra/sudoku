@@ -31,9 +31,8 @@ function main() {
     } while (foundLinearGuess)
    
     console.log('operation log', operationLog);
-
+    console.log(`Operations complete, solution was found to be ${utils.isSolutionValid(game) ? 'valid' : 'invalid'}.`);
     console.log(utils.prettyPrintGame(game));
-    
 }
 
 main();
