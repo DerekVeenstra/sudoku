@@ -3,11 +3,63 @@ const defs = require('./defs');
 const utils = require('./utils');
 
 module.exports = {
+    
+    /**
+     * Runs all strategies until no more values are able to be found
+     * @returns operation logs of the run
+     */
+    solve : function(game) {
+        const operationLog = [];
+        let valueFound;
+
+        do {   
+            valueFound = false;
+
+            const linearGuessResult = this.runLinearGuessStrategy(game);
+            if (!_.isEmpty(linearGuessResult.operationLog)) {
+                operationLog.push(...linearGuessResult.operationLog);
+            }
+
+            if (linearGuessResult.valueFound) {
+                valueFound = true;
+            }
+
+
+        } while (valueFound);
+
+        return operationLog;
+    },
+
+    /**
+     * Runs the linear guess strategy until no more values are able to be found
+     * @returns operation logs of the pass
+     */
+    runLinearGuessStrategy : function(game) {
+        const operationLog = [];
+        let foundLinearGuess = false;
+        do {
+            console.log('Number of unknown values before linear guess strategy run', utils.numberOfUnknownValues(game));
+            _.forEach(defs.numbers, number => {
+                linearGuessOperationLogs = this.linearGuessForNumber(game, number);
+    
+                if (!_.isEmpty(linearGuessOperationLogs)) {
+                    operationLog.push(...linearGuessOperationLogs); 
+                }
+            });
+    
+            foundLinearGuess = !_.isEmpty(linearGuessOperationLogs);
+    
+            console.log('Number of unknown values after strategy run', utils.numberOfUnknownValues(game));
+        } while (foundLinearGuess)
+
+        return { valueFound : foundLinearGuess, operationLog };
+    },
+    
     /**
      *  Generates notes and values based on intersection of rows and columns for the given number
      *  Returns true if a value was found
      */
-    linearGuess : function(game, number) {
+    linearGuessForNumber : function(game, number) {
         // get all rows that contain this number
         const rowIndexes = [];
         for (let i = 0; i < defs.gameLength; i++) {
@@ -43,16 +95,16 @@ module.exports = {
         // see if those blocks have rows or columns forcing the number to exist
         // update the operation log and set the new value to the cell if a value is found
         _.forEach(blocksWithoutNumber, block => {
-            let newValues = this.findLinearGuessBlockValues(game, block, number, rowIndexes, colIndexes);
+            let newValues = this.setLinearGuessBlockValues(game, block, number, rowIndexes, colIndexes);
 
             if (newValues) {
                 if (!_.isArray(newValues)) {
                     newValues = [ newValues ];
                 }
 
-                operationLogs = _.map(newValues, newValue => {
+                operationLogs.push(..._.map(newValues, newValue => {
                     return `Found a ${number} at row ${newValue.rowIndex}, col ${newValue.colIndex} using linear guess strategy.`;
-                });
+                }));
 
                 _.forEach(newValues, newValue => {
                     game.rows[newValue.rowIndex][newValue.colIndex].value = number;
@@ -65,10 +117,12 @@ module.exports = {
 
     /**
      * Given rows and columns containing the target number, determine if the block has the given number value in a cell
+     * This function uses side effects to set values on Cells when it finds the value or notes
+     * 
+     * @returns undefined if a block value was not able to be found, Cell if a value was found
      * TODO: Notes
      */
-    findLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
-
+    setLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
         // Validate that the given number isn't already in the block
         if (utils.doesBlockIncludeNumber(game, block, number)) {
             throw ('Block already contains number');
@@ -93,4 +147,6 @@ module.exports = {
             return cellArray[0];
         }
     }
+
+    
 }

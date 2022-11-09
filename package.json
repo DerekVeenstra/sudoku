@@ -1,5 +1,11 @@
 {
   "dependencies": {
-    "lodash": "^4.17.21"
+    "chai": "^4.3.7",
+    "lodash": "^4.17.21",
+    "mocha": "^10.1.0"
+  },
+
+  "scripts": {
+    "test": "mocha"
   }
 }
