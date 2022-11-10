@@ -6,26 +6,35 @@ module.exports = {
     
     /**
      * Runs all strategies until no more values are able to be found
+     * TODO: Modularize this to run all strategies based on an array / inherited class
      * @returns operation logs of the run
      */
     solve : function(game) {
         const operationLog = [];
-        let valueFound;
+        let wasValueFound;
 
         do {   
-            valueFound = false;
+            wasValueFound = false;
 
             const linearGuessResult = this.runLinearGuessStrategy(game);
             if (!_.isEmpty(linearGuessResult.operationLog)) {
                 operationLog.push(...linearGuessResult.operationLog);
             }
 
-            if (linearGuessResult.valueFound) {
-                valueFound = true;
+            if (linearGuessResult.wasValueFound) {
+                wasValueFound = true;
             }
 
+            const finalCompletionResult = this.runFinalCompletionStrategy(game);
+            if (!_.isEmpty(finalCompletionResult.operationLog)) {
+                operationLog.push(...finalCompletionResult.operationLog);
+            }
 
-        } while (valueFound);
+            if (finalCompletionResult.wasValueFound) {
+                wasValueFound = true;
+            }
+
+        } while (wasValueFound);
 
         return operationLog;
     },
@@ -52,7 +61,7 @@ module.exports = {
             console.log('Number of unknown values after strategy run', utils.numberOfUnknownValues(game));
         } while (foundLinearGuess)
 
-        return { valueFound : foundLinearGuess, operationLog };
+        return { wasValueFound : foundLinearGuess, operationLog };
     },
     
     /**
@@ -146,7 +155,111 @@ module.exports = {
         if (cellArray.length === 1) {
             return cellArray[0];
         }
-    }
+    },
+
+    /**
+     * * Runs the final completion strategy until no more values are able to be found
+     * If any rows, columns or blocks have 8 values, set the 9th to be the missing value
+     * @returns operation logs of the pass
+     */
+    runFinalCompletionStrategy : function(game) {
+        const operationLog = [];
+        let foundFinalCompletionGuess = false;
+        do {
+            console.log('Number of unknown values before linear guess strategy run', utils.numberOfUnknownValues(game));
+            _.forEach(defs.numbers, number => {
+                finalCompletionRowsOperationLog = this.setFinalCompletionForRows(game);
+                if (!_.isEmpty(finalCompletionRowsOperationLog)) {
+                    operationLog.push(...finalCompletionRowsOperationLog); 
+                }
+
+                finalCompletionColsOperationLog = this.setFinalCompletionForCols(game);
+                if (!_.isEmpty(finalCompletionColsOperationLog)) {
+                    operationLog.push(...finalCompletionColsOperationLog); 
+                }
+
+                // finalCompletionBlockssOperationLog = this.setFinalCompletionForBlocks(game);
+                // if (!_.isEmpty(finalCompletionBlockssOperationLog)) {
+                //     operationLog.push(...finalCompletionBlockssOperationLog); 
+                // }
+            });
+    
+            foundFinalCompletionGuess = !_.isEmpty(finalCompletionRowsOperationLog);
+    
+            console.log('Number of unknown values after strategy run', utils.numberOfUnknownValues(game));
+        } while (foundFinalCompletionGuess)
+
+        return { wasValueFound : foundFinalCompletionGuess, operationLog };
+    },
+
+    setFinalCompletionForRows : function(game) {
+        const operationLog = [];
+
+        for (let i = 0; i < defs.gameLength; i++) {
+            const rowValues = _.map(game.rows[i], 'value');
+            const missingValues = _(defs.numbers)
+                .map(number => {
+                    if (!_.includes(rowValues, number)) {
+                        return number;
+                    }}
+                )
+                .filter(value => !!value)
+                .valueOf();
+
+            // One missing value was found, therefore we can set that final Cell value to the missing value
+            if (missingValues.length === 1) {
+                const missingValue = missingValues[0];
+                let cellToUpdate = _.filter(game.rows[i], cell => !cell.value);
+
+                if (_.isEmpty(cellToUpdate) || cellToUpdate.length > 1) {
+                    throw 'setFinalCompletionForRows: Expected one missing value cell but it was either more than one or empty';
+                }
+
+                cellToUpdate = cellToUpdate[0];
+                cellToUpdate.value = missingValue;
+                operationLog.push(`Found a ${missingValue} at row ${cellToUpdate.rowIndex}, col ${cellToUpdate.colIndex} using final completion (rows) strategy.`);
+            }
+        }
+
+        return operationLog;
+    },
+
+    // TODO: Can be refactored to be one thing with rows if the string row or col is provided
+    setFinalCompletionForCols : function(game) {
+        const operationLog = [];
+
+        for (let i = 0; i < defs.gameLength; i++) {
+            const colValues = _.map(game.cols[i], 'value');
+            const missingValues = _(defs.numbers)
+                .map(number => {
+                    if (!_.includes(colValues, number)) {
+                        return number;
+                    }}
+                )
+                .filter(value => !!value)
+                .valueOf();
+
+            // One missing value was found, therefore we can set that final Cell value to the missing value
+            if (missingValues.length === 1) {
+                const missingValue = missingValues[0];
+                let cellToUpdate = _.filter(game.cols[i], cell => !cell.value);
+
+                if (_.isEmpty(cellToUpdate) || cellToUpdate.length > 1) {
+                    throw 'setFinalCompletionForCols: Expected one missing value cell but it was either more than one or empty';
+                }
+
+                cellToUpdate = cellToUpdate[0];
+                cellToUpdate.value = missingValue;
+                operationLog.push(`Found a ${missingValue} at row ${cellToUpdate.rowIndex}, col ${cellToUpdate.colIndex} using final completion (cols) strategy.`);
+            }
+        }
+
+        return operationLog;
+    },
+
+    setFinalCompletionForBlocks : function(game) {
+
+    },
 
     
 }

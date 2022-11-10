@@ -7,7 +7,7 @@ const sampleGames = require('./sampleGames');
 
 
 function main() {
-    const game = GameParser.parseGame(sampleGames.game1);
+    const game = GameParser.parseGame(sampleGames.game2);
 
     console.log(utils.prettyPrintGame(game));
 
