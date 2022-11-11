@@ -116,7 +116,7 @@ module.exports = {
                 }));
 
                 _.forEach(newValues, newValue => {
-                    game.rows[newValue.rowIndex][newValue.colIndex].value = number;
+                    game.rows[newValue.rowIndex][newValue.colIndex].setValue(number);
                 });
             }
         });
@@ -129,7 +129,7 @@ module.exports = {
      * This function uses side effects to set values on Cells when it finds the value or notes
      * 
      * @returns undefined if a block value was not able to be found, Cell if a value was found
-     * TODO: Notes
+     * TODO: Notes and note removal
      */
     setLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
         // Validate that the given number isn't already in the block
@@ -144,10 +144,7 @@ module.exports = {
 
         // If there are only two cells left, add notes UNTESTED
         if (cellArray.length === 2) {
-            _.map(cellArray, cell => {
-                cell.notes.push(number);
-            });
-
+            _.forEach(cellArray, cell => cell.setNoteNumbers(number));
             return;
         }
 
@@ -160,6 +157,7 @@ module.exports = {
     /**
      * * Runs the final completion strategy until no more values are able to be found
      * If any rows, columns or blocks have 8 values, set the 9th to be the missing value
+     * TODO: tests
      * @returns operation logs of the pass
      */
     runFinalCompletionStrategy : function(game) {
@@ -178,10 +176,10 @@ module.exports = {
                     operationLog.push(...finalCompletionColsOperationLog); 
                 }
 
-                // finalCompletionBlockssOperationLog = this.setFinalCompletionForBlocks(game);
-                // if (!_.isEmpty(finalCompletionBlockssOperationLog)) {
-                //     operationLog.push(...finalCompletionBlockssOperationLog); 
-                // }
+                finalCompletionBlockssOperationLog = this.setFinalCompletionForBlocks(game);
+                if (!_.isEmpty(finalCompletionBlockssOperationLog)) {
+                    operationLog.push(...finalCompletionBlockssOperationLog); 
+                }
             });
     
             foundFinalCompletionGuess = !_.isEmpty(finalCompletionRowsOperationLog);
@@ -197,14 +195,7 @@ module.exports = {
 
         for (let i = 0; i < defs.gameLength; i++) {
             const rowValues = _.map(game.rows[i], 'value');
-            const missingValues = _(defs.numbers)
-                .map(number => {
-                    if (!_.includes(rowValues, number)) {
-                        return number;
-                    }}
-                )
-                .filter(value => !!value)
-                .valueOf();
+            const missingValues = utils.getMissingValues(rowValues);
 
             // One missing value was found, therefore we can set that final Cell value to the missing value
             if (missingValues.length === 1) {
@@ -216,7 +207,7 @@ module.exports = {
                 }
 
                 cellToUpdate = cellToUpdate[0];
-                cellToUpdate.value = missingValue;
+                cellToUpdate.setValue(missingValue);
                 operationLog.push(`Found a ${missingValue} at row ${cellToUpdate.rowIndex}, col ${cellToUpdate.colIndex} using final completion (rows) strategy.`);
             }
         }
@@ -230,14 +221,7 @@ module.exports = {
 
         for (let i = 0; i < defs.gameLength; i++) {
             const colValues = _.map(game.cols[i], 'value');
-            const missingValues = _(defs.numbers)
-                .map(number => {
-                    if (!_.includes(colValues, number)) {
-                        return number;
-                    }}
-                )
-                .filter(value => !!value)
-                .valueOf();
+            const missingValues = utils.getMissingValues(colValues);
 
             // One missing value was found, therefore we can set that final Cell value to the missing value
             if (missingValues.length === 1) {
@@ -249,7 +233,7 @@ module.exports = {
                 }
 
                 cellToUpdate = cellToUpdate[0];
-                cellToUpdate.value = missingValue;
+                cellToUpdate.setValue(missingValue);
                 operationLog.push(`Found a ${missingValue} at row ${cellToUpdate.rowIndex}, col ${cellToUpdate.colIndex} using final completion (cols) strategy.`);
             }
         }
@@ -257,9 +241,38 @@ module.exports = {
         return operationLog;
     },
 
+    /**
+     * 
+     * TODO: Add notes when othere are only two values left in the block
+     * TODO: tests
+     */
     setFinalCompletionForBlocks : function(game) {
+        const operationLog = [];
 
-    },
+        _.forEach(game.blocks, block => {
+            for (let i = 0; i < defs.gameLength; i++) {
+                const blockCellArray = utils.getBlockCellArray(game, game.blocks[i])
+                const blockCellValues = _.map(blockCellArray, 'value');
+                const missingValues = utils.getMissingValues(blockCellValues);
 
+                if (missingValues.length === 2) {
+                    const blockCellsWithoutValues = _.filter(blockCellArray, cell => !cell.value);
+                    _.forEach(blockCellsWithoutValues, cell => cell.setNoteNumbers(missingValues));
+                }
+
+                if (missingValues.length === 1) {
+                    const missingValue = missingValues[0];
+                    let cellToUpdate = _.filter(game.blocks[i], cell => !cell.value);
     
+                    if (_.isEmpty(cellToUpdate) || cellToUpdate.length > 1) {
+                        throw 'setFinalCompletionForBlocks: Expected one missing value cell but it was either more than one or empty';
+                    }
+    
+                    cellToUpdate = cellToUpdate[0];
+                    cellToUpdate.setValue(missingValue);
+                    operationLog.push(`Found a ${missingValue} at row ${cellToUpdate.rowIndex}, col ${cellToUpdate.colIndex} using final completion (blocks) strategy.`);
+                }
+            }
+        });
+    },
 }

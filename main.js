@@ -7,12 +7,14 @@ const sampleGames = require('./sampleGames');
 
 
 function main() {
-    const game = GameParser.parseGame(sampleGames.game2);
+    const game = GameParser.parseGame(sampleGames.game3);
 
     console.log(utils.prettyPrintGame(game));
 
     let operationLog = [];
     operationLog = strategies.solve(game);
+
+    console.log ('test', game.rows[3][3], game.rows[3][5]);
    
     console.log('operation log', operationLog);
     console.log(`Operations complete, solution was found to be ${utils.isSolutionValid(game) ? 'valid' : 'invalid'}.`);

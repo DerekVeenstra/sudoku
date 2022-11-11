@@ -6,6 +6,10 @@ module.exports = {
      * This is probably a dumb way to do this, blocks should have cell references. Or just run this once and re-populate Block object
      */
     getBlockCellArray : function(game, block) {
+        if (!block || !block.rows || !block.cols) {
+            throw 'Block not properly defined';
+        }
+
         const cellArray = [];
         _.forEach(block.rows, row => {
             _.forEach(block.cols, col => {
@@ -115,6 +119,21 @@ module.exports = {
         });
 
         return result;
+    },
+
+    /**
+     * Return any missing values from a row, col or block
+     * @param {*} set - A row, col or block
+     */
+    getMissingValues : function(set) {
+        return _(defs.numbers)
+            .map(number => {
+                if (!_.includes(set, number)) {
+                    return number;
+                }}
+            )
+            .filter(value => !!value)
+            .valueOf();
     },
 
     prettyPrintGame : function(game) {
