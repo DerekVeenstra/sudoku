@@ -14,7 +14,6 @@ class Cell {
     }
 
     setNoteNumbers(numbers) {
-        console.log('herex');
         if (!numbers) {
             throw 'Can only set numbers as notes';
         }
