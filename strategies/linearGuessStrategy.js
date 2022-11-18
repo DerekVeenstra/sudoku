@@ -9,28 +9,30 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-        let foundLinearGuess = false;
-        do {
-            console.log('Number of unknown values before linear guess strategy run', utils.numberOfUnknownValues(game));
+
+        let wasAnyValueFound = false;
+        let wasValueFoundDuringPass = true;
+        
+        while(wasValueFoundDuringPass) {
             _.forEach(defs.numbers, number => {
                 linearGuessOperationLogs = this.linearGuessForNumber(game, number);
-    
                 if (!_.isEmpty(linearGuessOperationLogs)) {
                     operationLog.push(...linearGuessOperationLogs); 
                 }
             });
-    
-            foundLinearGuess = !_.isEmpty(linearGuessOperationLogs);
-    
-            console.log('Number of unknown values after strategy run', utils.numberOfUnknownValues(game));
-        } while (foundLinearGuess)
+            wasValueFoundDuringPass = !_.isEmpty(linearGuessOperationLogs);
 
-        return { wasValueFound : foundLinearGuess, operationLog };
+            if (wasValueFoundDuringPass) {
+                wasAnyValueFound = true;
+            }
+        }
+
+        return { wasAnyValueFound, operationLog };
     },
     
     /**
      *  Generates notes and values based on intersection of rows and columns for the given number
-     *  Returns true if a value was found
+     *  Returns operation logs
      */
     linearGuessForNumber : function(game, number) {
         // get all rows that contain this number

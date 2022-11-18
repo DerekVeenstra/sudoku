@@ -11,9 +11,15 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-        let foundFinalCompletionGuess = false;
-        do {
-            console.log('Number of unknown values before linear guess strategy run', utils.numberOfUnknownValues(game));
+
+        let wasAnyValueFound = false;
+        let wasValueFoundDuringPass = true;
+        
+        while(wasValueFoundDuringPass) {
+
+
+            // TODO, WTF IS NUMBER NOT DOING ANYTHING
+
             _.forEach(defs.numbers, number => {
                 rowsAndColsOperationLog = this.setFinalCompletionForRowsAndCols(game);
                 if (!_.isEmpty(rowsAndColsOperationLog)) {
@@ -26,12 +32,14 @@ module.exports = {
                 }
             });
     
-            foundFinalCompletionGuess = !_.isEmpty(finalCompletionRowsOperationLog);
-    
-            console.log('Number of unknown values after strategy run', utils.numberOfUnknownValues(game));
-        } while (foundFinalCompletionGuess)
+            wasValueFoundDuringPass = !_.isEmpty(rowsAndColsOperationLog) || !_.isEmpty(blocksOperationLog);
 
-        return { wasValueFound : foundFinalCompletionGuess, operationLog };
+            if (wasValueFoundDuringPass) {
+                wasAnyValueFound = true;
+            }
+        }
+
+        return { wasAnyValueFound, operationLog };
     },
 
     setFinalCompletionForRowsAndCols : function(game) {
@@ -83,9 +91,11 @@ module.exports = {
 
                 if (missingValues.length === 1) {
                     const missingValue = missingValues[0];
-                    let cellToUpdate = _.filter(game.blocks[i], cell => !cell.value);
+                    let cellToUpdate = _.filter(blockCellArray, cell => !cell.value);
     
+
                     if (_.isEmpty(cellToUpdate) || cellToUpdate.length > 1) {
+                        console.log(cellToUpdate);
                         throw 'setFinalCompletionForBlocks: Expected one missing value cell but it was either more than one or empty';
                     }
     
@@ -95,5 +105,7 @@ module.exports = {
                 }
             }
         });
+
+        return operationLog;
     },
 }

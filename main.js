@@ -11,7 +11,7 @@ const allStrategies = [ linearGuessStrategy, finalCompletionStrategy ];
 
 
 function main() {
-    const game = GameParser.parseGame(sampleGames.game3);
+    const game = GameParser.parseGame(sampleGames.game2);
 
     console.log(utils.prettyPrintGame(game));
 
@@ -28,9 +28,9 @@ function main() {
  */
  function solve(game) {
     const operationLog = [];
-    let wasValueFound;
+    let wasValueFound = true;
 
-    do {   
+    while(wasValueFound) {
         wasValueFound = false;
 
         _.forEach(allStrategies, strategy => {
@@ -40,11 +40,11 @@ function main() {
                 operationLog.push(...strategyResult.operationLog);
             }
     
-            if (strategyResult.wasValueFound) {
+            if (strategyResult.wasAnyValueFound) {
                 wasValueFound = true;
             }
         })
-    } while (wasValueFound);
+    }
 
     return operationLog;
 }
