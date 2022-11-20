@@ -6,21 +6,19 @@ class Block {
     cols = [];
     cells = [];
 
-    constructor(rows, cols, game) {
+    constructor(rows, cols, cells) {
         this.rows = rows;
         this.cols = cols;
 
-        this.setCellValues(game);
+        this.setCellValues(cells);
     }
 
-    setCellValues(game) {
+    setCellValues(cells) {
         for(let i = 0; i < this.rows.length; i++) {
-            for(let j = j < this.cols.length; j++) {
-                this.cells.push(game[i][j]);
+            for(let j = 0; j < this.cols.length; j++) {
+                this.cells.push(cells[i][j]);
             }
         }
-
-        console.log('this.cells', this.cells);
     }
 }
 

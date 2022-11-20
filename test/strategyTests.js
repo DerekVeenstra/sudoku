@@ -5,6 +5,7 @@ const sampleGames = require('../sampleGames');
 
 const linearGuessStrategy = require('../strategies/linearGuessStrategy');
 const finalCompletionStrategy = require('../strategies/finalCompletionStrategy');
+const nakedSingleStrategy = require('../strategies/nakedSingleStrategy');
 
 const linearGuessBasicCaseGame =
 `
@@ -56,7 +57,20 @@ const finalCompletionBasicCaseBlocksGame =
          
          
          
+`;
+
+const nakedSingleBasicCaseGame =
 `
+ 23 45   
+ 67      
+         
+8        
+9        
+         
+         
+         
+         
+`;
 
 describe('strategies', function() {
 
@@ -82,7 +96,9 @@ describe('strategies', function() {
 
         it('should solve a sample easy puzzle with only the linear guess strategy', function() {
             const game = GameParser.parseGame(sampleGames.game1);
-            linearGuessStrategy.run(game);
+            const result = linearGuessStrategy.run(game);
+            console.log(utils.prettyPrintGame(game));
+            console.log('result', result);
             expect(utils.isSolutionValid(game)).to.be.true;
         });
     });
@@ -133,6 +149,28 @@ describe('strategies', function() {
             expect(game.rows[0][0].value).to.equal(null);
             
             const result = finalCompletionStrategy.run(game);
+            expect(result.operationLog.length).to.equal(1);
+
+            expect(game.rows[0][0].value).to.equal('1');
+        });
+    });
+
+    describe('nakedSingle', function() {
+
+        // The basic case of the naked single strategy is to look at a given cell's possible values by checking
+        // what numbers are already in use in the cell's row, col and block. For example,
+        // |x|2|3| |4|5|..
+        // | |6|7|..
+        // | | | |..
+        // |8|..
+        // |9|..
+        // The cell value for x must be 1 since all other numbers are used in that cell's row, col and block.
+
+        it('should find naked single cell values', function() {
+            const game = GameParser.parseGame(nakedSingleBasicCaseGame);
+            expect(game.rows[0][0].value).to.equal(null);
+            
+            const result = nakedSingleStrategy.run(game);
             expect(result.operationLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');

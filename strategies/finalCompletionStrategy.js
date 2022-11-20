@@ -80,18 +80,17 @@ module.exports = {
 
         _.forEach(game.blocks, block => {
             for (let i = 0; i < defs.gameLength; i++) {
-                const blockCellArray = utils.getBlockCellArray(game, game.blocks[i])
-                const blockCellValues = _.map(blockCellArray, 'value');
+                const blockCellValues = _.map(game.blocks[i].cells, 'value');
                 const missingValues = utils.getMissingValues(blockCellValues);
 
                 if (missingValues.length === 2) {
-                    const blockCellsWithoutValues = _.filter(blockCellArray, cell => !cell.value);
+                    const blockCellsWithoutValues = _.filter(game.blocks[i].cells, cell => !cell.value);
                     _.forEach(blockCellsWithoutValues, cell => cell.setNoteNumbers(missingValues));
                 }
 
                 if (missingValues.length === 1) {
                     const missingValue = missingValues[0];
-                    let cellToUpdate = _.filter(blockCellArray, cell => !cell.value);
+                    let cellToUpdate = _.filter(game.blocks[i].cells, cell => !cell.value);
     
 
                     if (_.isEmpty(cellToUpdate) || cellToUpdate.length > 1) {

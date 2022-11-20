@@ -11,7 +11,7 @@ module.exports = {
     
         const rows = this.parseRows(game);
         const cols = this.parseCols(game, rows);
-        const blocks = this.parseBlocks(game);
+        const blocks = this.parseBlocks(rows);
         
         return { rows, cols, blocks };
     },
@@ -59,20 +59,20 @@ module.exports = {
         return cols;
     },
 
-    parseBlocks : function(rows, cols) {
+    parseBlocks : function(rows) {
 
         return [
-            new Block([0, 1, 2], [0, 1, 2], game),
-            new Block([0, 1, 2], [3, 4, 5], game),
-            new Block([0, 1, 2], [6, 7, 8], game),
+            new Block([0, 1, 2], [0, 1, 2], rows),
+            new Block([0, 1, 2], [3, 4, 5], rows),
+            new Block([0, 1, 2], [6, 7, 8], rows),
             
-            new Block([3, 4, 5], [0, 1, 2], game),
-            new Block([3, 4, 5], [3, 4, 5], game),
-            new Block([3, 4, 5], [6, 7, 8], game),
+            new Block([3, 4, 5], [0, 1, 2], rows),
+            new Block([3, 4, 5], [3, 4, 5], rows),
+            new Block([3, 4, 5], [6, 7, 8], rows),
 
-            new Block([6, 7, 8], [0, 1, 2], game),
-            new Block([6, 7, 8], [3, 4, 5], game),
-            new Block([6, 7, 8], [6, 7, 8], game),
+            new Block([6, 7, 8], [0, 1, 2], rows),
+            new Block([6, 7, 8], [3, 4, 5], rows),
+            new Block([6, 7, 8], [6, 7, 8], rows),
         ];
     }
 }

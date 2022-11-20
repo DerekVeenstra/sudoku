@@ -11,7 +11,7 @@ const allStrategies = [ linearGuessStrategy, finalCompletionStrategy ];
 
 
 function main() {
-    const game = GameParser.parseGame(sampleGames.game2);
+    const game = GameParser.parseGame(sampleGames.mediumGame1);
 
     console.log(utils.prettyPrintGame(game));
 

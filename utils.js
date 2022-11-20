@@ -47,6 +47,10 @@ module.exports = {
         return isNumberFound;
     },
 
+    getBlockThatCellBelongsTo : function(game, cell) {
+        return _.find(game.blocks, block => _.includes(block.rows, cell.rowIndex) && _.includes(block.cols, cell.colIndex));
+    },
+
     /**
      * Ensure that all rows, columns and blocks have unique numbers
      * Returns false if the game is unfinished or if the solution is invalid
