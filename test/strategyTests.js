@@ -1,7 +1,9 @@
+const _ = require('lodash');
 const expect = require('chai').expect;
 const GameParser = require('../GameParser');
 const utils = require('../utils')
 const sampleGames = require('../sampleGames');
+const main = require('../main');
 
 const linearGuessStrategy = require('../strategies/linearGuessStrategy');
 const finalCompletionStrategy = require('../strategies/finalCompletionStrategy');
@@ -95,10 +97,8 @@ describe('strategies', function() {
         });
 
         it('should solve a sample easy puzzle with only the linear guess strategy', function() {
-            const game = GameParser.parseGame(sampleGames.game1);
-            const result = linearGuessStrategy.run(game);
-            console.log(utils.prettyPrintGame(game));
-            console.log('result', result);
+            const game = GameParser.parseGame(sampleGames.easyGame1);
+            linearGuessStrategy.run(game);
             expect(utils.isSolutionValid(game)).to.be.true;
         });
     });
@@ -177,4 +177,14 @@ describe('strategies', function() {
         });
     });
 
+});
+
+describe('sample games', function() {
+    it('should successfully solve all sample games', function() {
+        _.forOwn(sampleGames, sampleGame => {
+            const game = GameParser.parseGame(sampleGame);
+            main.solve(game);
+            expect(utils.isSolutionValid(game)).to.be.true;
+        })
+    });
 });

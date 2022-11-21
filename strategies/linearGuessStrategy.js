@@ -9,8 +9,6 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-
-        let wasAnyValueFound = false;
         let wasValueFoundDuringPass = true;
         
         while(wasValueFoundDuringPass) {
@@ -21,13 +19,9 @@ module.exports = {
                 }
             });
             wasValueFoundDuringPass = !_.isEmpty(linearGuessOperationLogs);
-
-            if (wasValueFoundDuringPass) {
-                wasAnyValueFound = true;
-            }
         }
 
-        return { wasAnyValueFound, operationLog };
+        return { operationLog };
     },
     
     /**
@@ -60,6 +54,8 @@ module.exports = {
                 blocksWithoutNumber.push(block);
             }
         });
+
+        
 
         if (_.isEmpty(blocksWithoutNumber)) {
             return false;

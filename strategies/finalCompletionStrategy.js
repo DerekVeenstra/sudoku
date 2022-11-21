@@ -11,13 +11,9 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-
-        let wasAnyValueFound = false;
         let wasValueFoundDuringPass = true;
         
         while(wasValueFoundDuringPass) {
-
-
             // TODO, WTF IS NUMBER NOT DOING ANYTHING
 
             _.forEach(defs.numbers, number => {
@@ -33,13 +29,9 @@ module.exports = {
             });
     
             wasValueFoundDuringPass = !_.isEmpty(rowsAndColsOperationLog) || !_.isEmpty(blocksOperationLog);
-
-            if (wasValueFoundDuringPass) {
-                wasAnyValueFound = true;
-            }
         }
 
-        return { wasAnyValueFound, operationLog };
+        return { operationLog };
     },
 
     setFinalCompletionForRowsAndCols : function(game) {

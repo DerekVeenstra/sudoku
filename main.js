@@ -40,7 +40,7 @@ function main() {
                 operationLog.push(...strategyResult.operationLog);
             }
     
-            if (strategyResult.wasAnyValueFound) {
+            if (!_.isEmpty(strategyResult.operationLog)) {
                 wasValueFound = true;
             }
         })
@@ -49,4 +49,5 @@ function main() {
     return operationLog;
 }
 
+module.exports = { solve };
 main();
