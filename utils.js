@@ -51,6 +51,29 @@ module.exports = {
         return _.find(game.blocks, block => _.includes(block.rows, cell.rowIndex) && _.includes(block.cols, cell.colIndex));
     },
 
+    canCellContainNumber : function(game, cell, number) {
+        if (cell.value) {
+            throw 'Cell already has a value';
+        }
+
+        if (_.includes(_.map(game.rows[cell.rowIndex], 'value'), number)) {
+            return false;
+        }
+
+        if (_.includes(_.map(game.cols[cell.colIndex], 'value'), number)) {
+            return false;
+        }
+
+        const cellBlock = this.getBlockThatCellBelongsTo(game, cell);
+        const blockCellArray = this.getBlockCellArray(game, cellBlock);
+
+        if (_.includes(_.map(blockCellArray, 'value'), number)) {
+            return false;
+        }
+
+        return true;
+    },
+
     /**
      * Ensure that all rows, columns and blocks have unique numbers
      * Returns false if the game is unfinished or if the solution is invalid

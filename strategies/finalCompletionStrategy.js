@@ -42,7 +42,7 @@ module.exports = {
             for (let i = 0; i < defs.gameLength; i++) {
                 const values = _.map(game[operationType][i], 'value');
                 const missingValues = utils.getMissingValues(values);
-    
+
                 // One missing value was found, therefore we can set that final Cell value to the missing value
                 if (missingValues.length === 1) {
                     const missingValue = missingValues[0];
