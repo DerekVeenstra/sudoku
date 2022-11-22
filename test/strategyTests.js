@@ -35,6 +35,19 @@ const finalCompletionBasicCaseRowsGame =
          
 `;
 
+const finalCompletionAdvancedCaseRowsGame =
+`
+  3   789
+   1     
+         
+ 1       
+         
+         
+         
+         
+         
+`;
+
 const finalCompletionBasicCaseColsGame =
 `
          
@@ -48,12 +61,38 @@ const finalCompletionBasicCaseColsGame =
 9        
 `;
 
+const finalCompletionAdvancedCaseColsGame =
+`
+         
+   1     
+3        
+ 1       
+         
+         
+7        
+8        
+9        
+`;
+
 const finalCompletionBasicCaseBlocksGame =
 `
  23      
 456      
 789      
          
+         
+         
+         
+         
+         
+`;
+
+const finalCompletionAdvancedCaseBlocksGame =
+`
+  3      
+4  1     
+7 9      
+ 1       
          
          
          
@@ -118,6 +157,36 @@ describe('strategies', function() {
             expect(game.rows[0][0].value).to.equal('1');
         });
 
+        // The advanced case for final completion (rows) is to see if the number can only fit into one cell 
+        // due to the remaining cells being prevented from being that number due to it existing in other cols or blocks
+        it('should solve for the advanced case for rows', function() {
+            const game = GameParser.parseGame(finalCompletionAdvancedCaseRowsGame);
+            expect(game.rows[0][0].value).to.equal(null);
+            expect(game.rows[0][1].value).to.equal(null);
+            expect(game.rows[3][1].value).to.equal('1');
+            expect(game.rows[1][3].value).to.equal('1');
+            
+            const result = finalCompletionStrategy.run(game);
+            expect(result.operationLog.length).to.equal(1);
+
+            expect(game.rows[0][0].value).to.equal('1');
+        });
+
+        // The advanced case for final completion (cols) is to see if the number can only fit into one cell 
+        // due to the remaining cells being prevented from being that number due to it existing in other rows or blocks
+        it('should solve for the advanced case for cols', function() {
+            const game = GameParser.parseGame(finalCompletionAdvancedCaseColsGame);
+            expect(game.rows[0][0].value).to.equal(null);
+            expect(game.rows[1][0].value).to.equal(null);
+            expect(game.rows[3][1].value).to.equal('1');
+            expect(game.rows[1][3].value).to.equal('1');
+            
+            const result = finalCompletionStrategy.run(game);
+            expect(result.operationLog.length).to.equal(1);
+
+            expect(game.rows[0][0].value).to.equal('1');
+        });
+
         // The basic case for final completion (cols) is to see if a col has all but 1 number completed
         // For example, in the grid below x must be 1 since the rest of the col is filled out
         // |x|..
@@ -147,6 +216,20 @@ describe('strategies', function() {
         it('should solve for the basic case for blocks', function() {
             const game = GameParser.parseGame(finalCompletionBasicCaseBlocksGame);
             expect(game.rows[0][0].value).to.equal(null);
+            
+            const result = finalCompletionStrategy.run(game);
+            expect(result.operationLog.length).to.equal(1);
+
+            expect(game.rows[0][0].value).to.equal('1');
+        });
+
+        // The advanced case for final completion (blocks) is to see if the number can only fit into one cell 
+        // due to the remaining cells being prevented from being that number due to it existing in other rows or cols
+        it('should solve for the advanced case for blocks', function() {
+            const game = GameParser.parseGame(finalCompletionAdvancedCaseBlocksGame);
+            expect(game.rows[0][0].value).to.equal(null);
+            expect(game.rows[3][1].value).to.equal('1');
+            expect(game.rows[1][3].value).to.equal('1');
             
             const result = finalCompletionStrategy.run(game);
             expect(result.operationLog.length).to.equal(1);
