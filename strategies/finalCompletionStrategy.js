@@ -43,7 +43,6 @@ module.exports = {
                 const values = _.map(game[operationType][i], 'value');
                 const missingValues = utils.getMissingValues(values);
 
-
                 // for each missing value, is it limited to a single cell in the row or column
                 _.forEach(missingValues, missingValue => {
                     let validCells = _.filter(game[operationType][i], cell => !cell.value && utils.canCellContainNumber(game, cell, missingValue));
@@ -51,27 +50,10 @@ module.exports = {
                     // If the number is isolated to a single cell in the row or col, that cell must contain that value
                     if (validCells.length === 1) {
                         validCells = validCells[0];
-                        validCells.setValue(value);
+                        validCells.setValue(missingValue);
                         operationLog.push(`Found a ${missingValue} at row ${validCells.rowIndex}, col ${validCells.colIndex} using final completion (${operationType}) strategy.`);
                     }
                 }); 
-
-
-
-    
-                // One missing value was found, therefore we can set that final Cell value to the missing value
-                // if (missingValues.length === 1) {
-                //     const missingValue = missingValues[0];
-                //     let cellToUpdate = _.filter(game[operationType][i], cell => !cell.value);
-    
-                //     if (_.isEmpty(cellToUpdate) || cellToUpdate.length > 1) {
-                //         throw `setFinalCompletionForRowAndCols: Expected one missing value cell but it was either more than one or empty (${operationType})`;
-                //     }
-    
-                //     cellToUpdate = cellToUpdate[0];
-                //     cellToUpdate.setValue(missingValue);
-                //     operationLog.push(`Found a ${missingValue} at row ${cellToUpdate.rowIndex}, col ${cellToUpdate.colIndex} using final completion (${operationType}) strategy.`);
-                // }
             }
         });
 
