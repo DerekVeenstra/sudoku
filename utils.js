@@ -165,18 +165,29 @@ module.exports = {
 
     prettyPrintGame : function(game) {
         let output = '';
-        let line = '\n--------------------------------------\n';
+        let border = '\n-------------------------------------------------------\n';
+        let dividers = '\n|     |     |     |     |     |     |     |     |     |';
         
         for (let i = 0; i < defs.gameLength; i++) {
-            output += line;
-            for (let j = 0; j < defs.gameLength; j ++) {
-                output += `| ${game.rows[i][j].value ? game.rows[i][j].value : ' '} `;
+            output += border;
+
+            for (let j = 0; j < defs.gameLength; j++) {
+                const noteOutput = _.join(game.rows[i][j].notes, '');
+                output += `|${noteOutput}`;
+                output += ' '.repeat(5 - noteOutput.length);
+            }
+
+            output += '|\n';
+
+            for (let j = 0; j < defs.gameLength; j++) {
+                output += `|  ${game.rows[i][j].value ? game.rows[i][j].value : ' '}  `;
             }
 
             output += '|';
+            output += dividers;
         }
 
-        output += line;
+        output += border;
 
         return output;
     }

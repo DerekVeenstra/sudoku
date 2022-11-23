@@ -14,19 +14,15 @@ module.exports = {
         let wasValueFoundDuringPass = true;
         
         while(wasValueFoundDuringPass) {
-            // TODO, WTF IS NUMBER NOT DOING ANYTHING
+            rowsAndColsOperationLog = this.setFinalCompletionForRowsAndCols(game);
+            if (!_.isEmpty(rowsAndColsOperationLog)) {
+                operationLog.push(...rowsAndColsOperationLog); 
+            }
 
-            _.forEach(defs.numbers, number => {
-                rowsAndColsOperationLog = this.setFinalCompletionForRowsAndCols(game);
-                if (!_.isEmpty(rowsAndColsOperationLog)) {
-                    operationLog.push(...rowsAndColsOperationLog); 
-                }
-
-                blocksOperationLog = this.setFinalCompletionForBlocks(game);
-                if (!_.isEmpty(blocksOperationLog)) {
-                    operationLog.push(...blocksOperationLog); 
-                }
-            });
+            blocksOperationLog = this.setFinalCompletionForBlocks(game);
+            if (!_.isEmpty(blocksOperationLog)) {
+                operationLog.push(...blocksOperationLog); 
+            }
     
             wasValueFoundDuringPass = !_.isEmpty(rowsAndColsOperationLog) || !_.isEmpty(blocksOperationLog);
         }
