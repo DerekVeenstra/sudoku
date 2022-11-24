@@ -9,8 +9,6 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-
-        let wasAnyValueFound = false;
         let wasValueFoundDuringPass = true;
         
         while(wasValueFoundDuringPass) {
@@ -19,13 +17,9 @@ module.exports = {
                     operationLog.push(...opLogs); 
                 }
             wasValueFoundDuringPass = !_.isEmpty(opLogs);
-
-            if (wasValueFoundDuringPass) {
-                wasAnyValueFound = true;
-            }
         }
 
-        return { wasAnyValueFound, operationLog };
+        return { operationLog };
     },
     
     // For each cell, see if it can only be one number based on the existance of all other possible numbers
