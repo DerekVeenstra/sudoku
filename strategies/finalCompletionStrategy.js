@@ -46,7 +46,7 @@ module.exports = {
                     // If the number is isolated to a single cell in the row or col, that cell must contain that value
                     if (validCells.length === 1) {
                         validCells = validCells[0];
-                        validCells.setValue(missingValue);
+                        validCells.setValue(game, missingValue);
                         operationLog.push(`Found a ${missingValue} at row ${validCells.rowIndex}, col ${validCells.colIndex} using final completion (${operationType}) strategy.`);
                     }
                 }); 
@@ -75,7 +75,7 @@ module.exports = {
                     // If the number is isolated to a single cell in the row or col, that cell must contain that value
                     if (validCells.length === 1) {
                         validCells = validCells[0];
-                        validCells.setValue(missingValue);
+                        validCells.setValue(game, missingValue);
                         operationLog.push(`Found a ${missingValue} at row ${validCells.rowIndex}, col ${validCells.colIndex} using final completion (blocks) strategy.`);
                     }
                 }); 

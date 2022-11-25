@@ -43,7 +43,7 @@ const canCellContainNumberBlockGame =
          
 `;
 
-const canCellContainNumberValidGame =
+const emptyGame =
 `
          
          
@@ -58,7 +58,7 @@ const canCellContainNumberValidGame =
 
 describe('utils', function() {
 
-    describe('canCellContainNumber', function () {
+    describe('canCellContainNumber', function() {
 
         // If the top left cell is on a row with a 1, it can't be a 1
         it('should return false if the cell is on a row that contains the number', function() {
@@ -92,7 +92,7 @@ describe('utils', function() {
 
         // If the top left cell doesn't have a 1 in its row, col or block, it can be a 1
         it('should return true if the cell is not on a row, col or block with the number', function() {
-            const game = GameParser.parseGame(canCellContainNumberValidGame);
+            const game = GameParser.parseGame(emptyGame);
             expect(game.rows[0][0].value).to.equal(null);
             
             const result = utils.canCellContainNumber(game, game.rows[0][0], '1');
@@ -100,5 +100,29 @@ describe('utils', function() {
         });
 
 
-    })
+    });
+
+    describe('clearNotesForCellValue', function() {
+        
+        it('should clear notes on a cell row, col and block for the provided number and cell', function() {
+            const game = GameParser.parseGame(emptyGame);
+            const number = '1';
+            
+            const targetCell = game.rows[0][4];
+            const rowCell = game.rows[0][0];
+            const colCell = game.rows[4][4];
+            const blockCell = game.rows[1][3];
+    
+            rowCell.setNoteNumbers(number);
+            colCell.setNoteNumbers(number);
+            blockCell.setNoteNumbers(number);
+            
+            utils.clearNotesForCellValue(game, targetCell, number);
+    
+            expect(rowCell.notes).to.be.empty;
+            expect(colCell.notes).to.be.empty;
+            expect(blockCell.notes).to.be.empty;
+        });
+        
+    });
 });

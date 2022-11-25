@@ -78,7 +78,7 @@ module.exports = {
                 }));
 
                 _.forEach(newValues, newValue => {
-                    game.rows[newValue.rowIndex][newValue.colIndex].setValue(number);
+                    game.rows[newValue.rowIndex][newValue.colIndex].setValue(game, number);
                 });
             }
         });

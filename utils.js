@@ -51,6 +51,19 @@ module.exports = {
         return _.find(game.blocks, block => _.includes(block.rows, cell.rowIndex) && _.includes(block.cols, cell.colIndex));
     },
 
+    /**
+     * For a given cell and number, remove that number from the notes of the cell's row, col and block
+     */
+    clearNotesForCellValue : function(game, cell, number) {
+        const rowCells = game.rows[cell.rowIndex];
+        const colCells = game.cols[cell.colIndex];
+        
+        const cellBlock = this.getBlockThatCellBelongsTo(game, cell);
+        const blockCells = this.getBlockCellArray(game, cellBlock);
+
+        _.forEach([ ...rowCells, ...colCells, ...blockCells ], cell => cell.clearNoteNumber(number));
+    },
+
     canCellContainNumber : function(game, cell, number) {
         if (cell.value) {
             throw 'Cell already has a value';

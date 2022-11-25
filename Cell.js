@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const utils = require('./utils');
 
 class Cell {
 
@@ -30,12 +31,14 @@ class Cell {
     }
 
     clearNoteNumber(number) {
-        _.remove(this.notes, number);
+        _.pull(this.notes, number);
     }
 
-    setValue(value) {
+    setValue(game, value) {
         this.value = value;
         this.notes = [];
+
+        utils.clearNotesForCellValue(game, this, value);
     }
 }
 
