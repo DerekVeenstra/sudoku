@@ -7,8 +7,9 @@ const sampleGames = require('./sampleGames');
 const linearGuessStrategy = require('./strategies/linearGuessStrategy');
 const finalCompletionStrategy = require('./strategies/finalCompletionStrategy');
 const nakedSingleStrategy = require('./strategies/nakedSingleStrategy');
+const resolveNotesStrategy = require('./strategies/resolveNotesStrategy');
 
-const allStrategies = [ linearGuessStrategy, finalCompletionStrategy, nakedSingleStrategy ];
+const allStrategies = [ linearGuessStrategy, finalCompletionStrategy, nakedSingleStrategy, resolveNotesStrategy ];
 
 
 function main() {

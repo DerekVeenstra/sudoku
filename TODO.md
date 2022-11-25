@@ -8,3 +8,4 @@ TODO List
 - implement notes within blocks, look for note pairs and have some kind of "resolve notes" strategy?
 - Include notes in operations log
 - clear notes on row, col and block when that number is set as a value in a cell
+- change other strategies to "let wasOpLogGeneratedDuringPass = true"
