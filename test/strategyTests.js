@@ -293,21 +293,34 @@ describe('strategies', function() {
 
         describe('clearNotesFromRowCol', function() {
 
-            it.only('should clear notes from a row when two of that number is in cell notes in a block within a row', function() {
+            it('should clear notes from a row when two of that number is in cell notes in a block within a row', function() {
                 const game = GameParser.parseGame(emptyGame);
                 
                 game.rows[0][0].setNoteNumbers('1');
                 game.rows[0][1].setNoteNumbers('1');
                 game.rows[0][3].setNoteNumbers('1');
-                game.rows[0][8].setNoteNumbers('1');
+                game.rows[1][3].setNoteNumbers('1');
                 
-                const result = resolveNotesStrategy.run(game);
-                expect(result.operationLog.length).to.equal(2);
+                resolveNotesStrategy.run(game);
     
                 expect(game.rows[0][0].notes).to.eql([ '1' ]);
                 expect(game.rows[0][1].notes).to.eql([ '1' ]);
                 expect(game.rows[0][3].notes).to.eql([]);
-                expect(game.rows[0][8].notes).to.eql([]);
+            });
+
+            it.only('should clear notes from a coo when two of that number is in cell notes in a block within a col', function() {
+                const game = GameParser.parseGame(emptyGame);
+                
+                game.rows[0][0].setNoteNumbers('1');
+                game.rows[1][0].setNoteNumbers('1');
+                game.rows[3][0].setNoteNumbers('1');
+                game.rows[3][1].setNoteNumbers('1');
+                
+                resolveNotesStrategy.run(game);
+    
+                expect(game.rows[0][0].notes).to.eql([ '1' ]);
+                expect(game.rows[1][0].notes).to.eql([ '1' ]);
+                expect(game.rows[3][0].notes).to.eql([]);
             });
 
         });

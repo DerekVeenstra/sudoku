@@ -30,20 +30,19 @@ module.exports = {
     resolveNotes : function(game) {
         const operationLog = [];
 
-        // if there are two notes forming a row or col, remove that note from the rest of the row or col
-
         // if there is a note pair (two numbers that have notes in two cells of a block)
             // if there is a third number as part of a note pair, it can be removed since the note pair must contain both numbers
             // if there is a note pair in a row, block or col, can it resolve the remainder of the row col or block? Similar to linear guess.
 
-        // if there is only one of a note in a block, it must be that number
+        const clearNotesFromRowColOperationLog = this.clearNotesFromRowCol(game);
+        if (!_.isEmpty(clearNotesFromRowColOperationLog)) {
+            operationLog.push(...clearNotesFromRowColOperationLog);
+        }
 
         const setSingleNoteValueOperationLog = this.setSingleNoteValue(game);
         if (!_.isEmpty(setSingleNoteValueOperationLog)) {
             operationLog.push(...setSingleNoteValueOperationLog);
         }
-        
-
 
         return operationLog;
     },    
@@ -62,7 +61,6 @@ module.exports = {
                 const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
                 
                 if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2) {
-                    
                     // The cells are on the same row, clear that row of that number in cell notes (other than the cells we found)
                     if (cellsWithNoteNumber[0].rowIndex === cellsWithNoteNumber[1].rowIndex) {
                         const rowIndex = cellsWithNoteNumber[0].rowIndex;
@@ -80,7 +78,7 @@ module.exports = {
                     if (cellsWithNoteNumber[0].colIndex === cellsWithNoteNumber[1].colIndex) {
                         const colIndex = cellsWithNoteNumber[0].colIndex;
                         _.forEach(game.cols[colIndex], cell => {
-                            if (cell.colIndex !== cellsWithNoteNumber[0].colIndex && cell.colIndex !== cellsWithNoteNumber[1].colIndex) {
+                            if (cell.rowIndex !== cellsWithNoteNumber[0].rowIndex && cell.rowIndex !== cellsWithNoteNumber[1].rowIndex) {
                                 if (_.includes(cell.notes, number)) {
                                     cell.clearNoteNumber(number);
                                     operationLog.push(`Cleared a note for number ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using clear note from col strategy.`)
@@ -91,6 +89,8 @@ module.exports = {
                 }
             });
         });
+
+        return operationLog;
     },
 
     /**
