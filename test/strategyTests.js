@@ -276,17 +276,44 @@ describe('strategies', function() {
 
     describe('resolveNotes', function() {
 
-        it.only('should set a cell value if it has the only note for a given number', function() {
-            const game = GameParser.parseGame(emptyGame);
+        describe('setSingleNoteValue', function() {
             
-            game.rows[0][0].setNoteNumbers('1');
-            expect(game.rows[0][0].notes).to.eql([ '1' ]);
-            
-            const result = resolveNotesStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            it('should set a cell value if it has the only note for a given number', function() {
+                const game = GameParser.parseGame(emptyGame);
+                
+                game.rows[0][0].setNoteNumbers('1');
+                
+                const result = resolveNotesStrategy.run(game);
+                expect(result.operationLog.length).to.equal(1);
+    
+                expect(game.rows[0][0].value).to.equal('1');
+            });
 
-            expect(game.rows[0][0].value).to.equal('1');
         });
+
+        describe('clearNotesFromRowCol', function() {
+
+            it.only('should clear notes from a row when two of that number is in cell notes in a block within a row', function() {
+                const game = GameParser.parseGame(emptyGame);
+                
+                game.rows[0][0].setNoteNumbers('1');
+                game.rows[0][1].setNoteNumbers('1');
+                game.rows[0][3].setNoteNumbers('1');
+                game.rows[0][8].setNoteNumbers('1');
+                
+                const result = resolveNotesStrategy.run(game);
+                expect(result.operationLog.length).to.equal(2);
+    
+                expect(game.rows[0][0].notes).to.eql([ '1' ]);
+                expect(game.rows[0][1].notes).to.eql([ '1' ]);
+                expect(game.rows[0][3].notes).to.eql([]);
+                expect(game.rows[0][8].notes).to.eql([]);
+            });
+
+        });
+       
+
+
     });
 
 });

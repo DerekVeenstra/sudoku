@@ -55,8 +55,6 @@ module.exports = {
             }
         });
 
-        
-
         if (_.isEmpty(blocksWithoutNumber)) {
             return false;
         }
@@ -91,7 +89,6 @@ module.exports = {
      * This function uses side effects to set values on Cells when it finds the value or notes
      * 
      * @returns undefined if a block value was not able to be found, Cell if a value was found
-     * TODO: Notes and note removal
      */
     setLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
         // Validate that the given number isn't already in the block
@@ -104,9 +101,12 @@ module.exports = {
         // Remove all cells that are on the row or col of the number from other blocks, or if they already have a value assigned
         _.remove(cellArray, cell => cell.value || _.includes(rowIndexesWithNumber, cell.rowIndex) || _.includes(colIndexesWithNumber, cell.colIndex));
 
-        // If there are only two cells left, add notes UNTESTED
+        // If there are only two cells left, add notes
         if (cellArray.length === 2) {
-            _.forEach(cellArray, cell => cell.setNoteNumbers(number));
+            _.forEach(cellArray, cell => {
+                cell.setNoteNumbers(number);
+
+            });
             return;
         }
 

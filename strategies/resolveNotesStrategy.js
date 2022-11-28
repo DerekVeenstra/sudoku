@@ -49,6 +49,51 @@ module.exports = {
     },    
 
     /**
+     * If two notes of the same number are in the same block, and they're on the same row or col, clear the row or
+     * col from that note number across other blocks
+     */
+    clearNotesFromRowCol : function(game) {
+        const operationLog = [];
+
+        _.forEach(game.blocks, block => {
+            const blockCells = utils.getBlockCellArray(game, block);
+
+            _.forEach(defs.numbers, number => {
+                const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
+                
+                if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2) {
+                    
+                    // The cells are on the same row, clear that row of that number in cell notes (other than the cells we found)
+                    if (cellsWithNoteNumber[0].rowIndex === cellsWithNoteNumber[1].rowIndex) {
+                        const rowIndex = cellsWithNoteNumber[0].rowIndex;
+                        _.forEach(game.rows[rowIndex], cell => {
+                            if (cell.colIndex !== cellsWithNoteNumber[0].colIndex && cell.colIndex !== cellsWithNoteNumber[1].colIndex) {
+                                if (_.includes(cell.notes, number)) {
+                                    cell.clearNoteNumber(number);
+                                    operationLog.push(`Cleared a note for number ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using clear note from row strategy.`)
+                                }
+                            }
+                        });
+                    }
+
+                    // The cells are on the same col, clear that col of that number in cell notes (other than the cells we found)
+                    if (cellsWithNoteNumber[0].colIndex === cellsWithNoteNumber[1].colIndex) {
+                        const colIndex = cellsWithNoteNumber[0].colIndex;
+                        _.forEach(game.cols[colIndex], cell => {
+                            if (cell.colIndex !== cellsWithNoteNumber[0].colIndex && cell.colIndex !== cellsWithNoteNumber[1].colIndex) {
+                                if (_.includes(cell.notes, number)) {
+                                    cell.clearNoteNumber(number);
+                                    operationLog.push(`Cleared a note for number ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using clear note from col strategy.`)
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    },
+
+    /**
      * Find cells that have a note with the only occurance of that number in the block. That must be the cell value.
      */
     setSingleNoteValue : function(game) {

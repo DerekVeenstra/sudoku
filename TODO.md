@@ -10,3 +10,4 @@ TODO List
 - clear notes on row, col and block when that number is set as a value in a cell
 - change other strategies to "let wasOpLogGeneratedDuringPass = true"
 - getBlockCellArray => getBlockCells
+- refactor setLinearGuessBlockValues to return operrationlogs and add operationlog when notes are found
