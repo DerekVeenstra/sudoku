@@ -48,8 +48,8 @@ module.exports = {
         }
 
         // also add any rows and cols that are covered by notes
-        rowIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'row'));
-        colIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'col'));
+        // rowIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'row'));
+        // colIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'col'));
 
         // get all blocks that don't contain this number
         const blocksWithoutNumber = [];
