@@ -23,6 +23,19 @@ const linearGuessBasicCaseGame =
          
 `;
 
+const linearGuessNoteCaseGame =
+`
+         
+  3      
+ 56      
+         
+         
+         
+         
+         
+         
+`;
+
 const finalCompletionBasicCaseRowsGame =
 `
  23456789
@@ -149,10 +162,21 @@ describe('strategies', function() {
             expect(game.rows[1][1].value).to.equal('1');
         });
 
-        it('should solve a sample easy puzzle with only the linear guess strategy', function() {
-            const game = GameParser.parseGame(sampleGames.easyGame1);
-            linearGuessStrategy.run(game);
-            expect(utils.isSolutionValid(game)).to.be.true;
+        // The same as the basic case, but instead of a number in external blocks it is resolved using note pairs forming rows / cols
+        it('should find values using external note pairs forming rows and cols', function() {
+            const game = GameParser.parseGame(linearGuessNoteCaseGame);
+            const number = '1';
+            
+            game.rows[3][0].setNoteNumbers(number);
+            game.rows[4][0].setNoteNumbers(number);
+
+            game.rows[0][3].setNoteNumbers(number);
+            game.rows[0][4].setNoteNumbers(number);
+
+            const result = linearGuessStrategy.run(game);
+            expect(result.operationLog.length).to.equal(1);
+
+            expect(game.rows[1][1].value).to.equal('1');
         });
     });
 

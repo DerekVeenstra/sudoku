@@ -47,6 +47,10 @@ module.exports = {
             }
         }
 
+        // also add any rows and cols that are covered by notes
+        rowIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'row'));
+        colIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'col'));
+
         // get all blocks that don't contain this number
         const blocksWithoutNumber = [];
         _.forEach(game.blocks, block => {
@@ -91,6 +95,8 @@ module.exports = {
      * @returns undefined if a block value was not able to be found, Cell if a value was found
      */
     setLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
+        const operationLogs = [];
+        
         // Validate that the given number isn't already in the block
         if (utils.doesBlockIncludeNumber(game, block, number)) {
             throw ('Block already contains number');
