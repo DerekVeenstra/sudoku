@@ -291,7 +291,7 @@ describe('strategies', function() {
 
         });
 
-        describe('clearNotesFromRowCol', function() {
+        describe('resolveNotesFromRowCol', function() {
 
             it('should clear notes from a row when two of that number is in cell notes in a block within a row', function() {
                 const game = GameParser.parseGame(emptyGame);
@@ -308,7 +308,7 @@ describe('strategies', function() {
                 expect(game.rows[0][3].notes).to.eql([]);
             });
 
-            it.only('should clear notes from a coo when two of that number is in cell notes in a block within a col', function() {
+            it('should clear notes from a col when two of that number is in cell notes in a block within a col', function() {
                 const game = GameParser.parseGame(emptyGame);
                 
                 game.rows[0][0].setNoteNumbers('1');

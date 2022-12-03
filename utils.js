@@ -64,6 +64,26 @@ module.exports = {
         _.forEach([ ...rowCells, ...colCells, ...blockCells ], cell => cell.clearNoteNumber(number));
     },
 
+    getRowColCoveredByNotes : function(game, number, type) {
+        const primaryIndex = `${type}Index`;
+        const indexesCoveredByNotes = [];
+        
+        _.forEach(game.blocks, block => {
+            const blockCells = this.getBlockCellArray(game, block);
+
+            _.forEach(defs.numbers, number => {
+                const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
+                
+                if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2 
+                    && cellsWithNoteNumber[0][primaryIndex] === cellsWithNoteNumber[1][primaryIndex]) {
+                    indexesCoveredByNotes.push(cellsWithNoteNumber[0][primaryIndex]);
+                }
+            });
+        });
+
+        return indexesCoveredByNotes;
+    },
+
     canCellContainNumber : function(game, cell, number) {
         if (cell.value) {
             throw 'Cell already has a value';

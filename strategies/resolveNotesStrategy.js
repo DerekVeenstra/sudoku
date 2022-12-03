@@ -34,9 +34,9 @@ module.exports = {
             // if there is a third number as part of a note pair, it can be removed since the note pair must contain both numbers
             // if there is a note pair in a row, block or col, can it resolve the remainder of the row col or block? Similar to linear guess.
 
-        const clearNotesFromRowColOperationLog = this.clearNotesFromRowCol(game);
-        if (!_.isEmpty(clearNotesFromRowColOperationLog)) {
-            operationLog.push(...clearNotesFromRowColOperationLog);
+        const resolveNotesFromRowColOperationLog = this.resolveNotesFromRowCol(game);
+        if (!_.isEmpty(resolveNotesFromRowColOperationLog)) {
+            operationLog.push(...resolveNotesFromRowColOperationLog);
         }
 
         const setSingleNoteValueOperationLog = this.setSingleNoteValue(game);
@@ -51,7 +51,7 @@ module.exports = {
      * If two notes of the same number are in the same block, and they're on the same row or col, clear the row or
      * col from that note number across other blocks
      */
-    clearNotesFromRowCol : function(game) {
+    resolveNotesFromRowCol : function(game) {
         const operationLog = [];
 
         _.forEach(game.blocks, block => {
@@ -61,34 +61,45 @@ module.exports = {
                 const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
                 
                 if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2) {
-                    // The cells are on the same row, clear that row of that number in cell notes (other than the cells we found)
-                    if (cellsWithNoteNumber[0].rowIndex === cellsWithNoteNumber[1].rowIndex) {
-                        const rowIndex = cellsWithNoteNumber[0].rowIndex;
-                        _.forEach(game.rows[rowIndex], cell => {
-                            if (cell.colIndex !== cellsWithNoteNumber[0].colIndex && cell.colIndex !== cellsWithNoteNumber[1].colIndex) {
-                                if (_.includes(cell.notes, number)) {
-                                    cell.clearNoteNumber(number);
-                                    operationLog.push(`Cleared a note for number ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using clear note from row strategy.`)
-                                }
-                            }
-                        });
-                    }
+                    // Clear notes from rows and cols
+                    const clearNotesFromRowOperationLog = this.clearNotesFromRowCol(game, cellsWithNoteNumber, number, 'row');
+                    const clearNotesFromColOperationLog = this.clearNotesFromRowCol(game, cellsWithNoteNumber, number, 'col');
 
-                    // The cells are on the same col, clear that col of that number in cell notes (other than the cells we found)
-                    if (cellsWithNoteNumber[0].colIndex === cellsWithNoteNumber[1].colIndex) {
-                        const colIndex = cellsWithNoteNumber[0].colIndex;
-                        _.forEach(game.cols[colIndex], cell => {
-                            if (cell.rowIndex !== cellsWithNoteNumber[0].rowIndex && cell.rowIndex !== cellsWithNoteNumber[1].rowIndex) {
-                                if (_.includes(cell.notes, number)) {
-                                    cell.clearNoteNumber(number);
-                                    operationLog.push(`Cleared a note for number ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using clear note from col strategy.`)
-                                }
-                            }
-                        });
+                    if (!_.isEmpty(clearNotesFromRowOperationLog)) {
+                        operationLog.push(...clearNotesFromRowOperationLog);
                     }
+                    if (!_.isEmpty(clearNotesFromColOperationLog)) {
+                        operationLog.push(...clearNotesFromColOperationLog);
+                    }
+                    
                 }
             });
         });
+
+        return operationLog;
+    },
+
+    /**
+     * Clear the row or col of the notes for that number
+     * @param {*} type either 'row' or 'col'
+     */
+    clearNotesFromRowCol : function(game, cellsWithNoteNumber, number, type) {
+        const operationLog = [];
+        const primaryIndex = `${type}Index`;
+        const secondaryIndex = type === 'row' ? 'colIndex' : 'rowIndex';
+        const gameIndex = `${type}s`; // 'rows' or 'cols'
+
+        if (cellsWithNoteNumber[0][primaryIndex] === cellsWithNoteNumber[1][primaryIndex]) {
+            const targetIndex = cellsWithNoteNumber[0][primaryIndex];
+            _.forEach(game[gameIndex][targetIndex], cell => {
+                if (cell[secondaryIndex] !== cellsWithNoteNumber[0][secondaryIndex] && cell[secondaryIndex] !== cellsWithNoteNumber[1][secondaryIndex]) {
+                    if (_.includes(cell.notes, number)) {
+                        cell.clearNoteNumber(number);
+                        operationLog.push(`Cleared a note for number ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using clear note from ${type} strategy.`)
+                    }
+                }
+            });
+        }
 
         return operationLog;
     },

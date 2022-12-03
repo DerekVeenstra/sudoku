@@ -125,4 +125,35 @@ describe('utils', function() {
         });
         
     });
+
+    describe('getRowColCoveredByNotes', function() {
+        
+        it('should return the indexes covered by the row', function() {
+            const game = GameParser.parseGame(emptyGame);
+            const number = '1';
+
+            game.rows[0][0].setNoteNumbers(number);
+            game.rows[0][1].setNoteNumbers(number);
+
+            game.rows[1][7].setNoteNumbers(number);
+            game.rows[1][8].setNoteNumbers(number);
+
+            const results = utils.getRowColCoveredByNotes(game, number, 'row');
+            expect(results).to.eql([ 0, 1 ]);
+        });
+
+        it('should return the indexes covered by the col', function() {
+            const game = GameParser.parseGame(emptyGame);
+            const number = '1';
+
+            game.rows[0][0].setNoteNumbers(number);
+            game.rows[1][0].setNoteNumbers(number);
+
+            game.rows[7][1].setNoteNumbers(number);
+            game.rows[8][1].setNoteNumbers(number);
+
+            const results = utils.getRowColCoveredByNotes(game, number, 'col');
+            expect(results).to.eql([ 0, 1 ]);
+        });
+    })
 });
