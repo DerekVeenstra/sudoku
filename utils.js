@@ -5,7 +5,7 @@ module.exports = {
     /**
      * This is probably a dumb way to do this, blocks should have cell references. Or just run this once and re-populate Block object
      */
-    getBlockCellArray : function(game, block) {
+    getBlockCells : function(game, block) {
         if (!block || !block.rows || !block.cols) {
             throw 'Block not properly defined';
         }
@@ -59,7 +59,7 @@ module.exports = {
         const colCells = game.cols[cell.colIndex];
         
         const cellBlock = this.getBlockThatCellBelongsTo(game, cell);
-        const blockCells = this.getBlockCellArray(game, cellBlock);
+        const blockCells = this.getBlockCells(game, cellBlock);
 
         _.forEach([ ...rowCells, ...colCells, ...blockCells ], cell => cell.clearNoteNumber(number));
     },
@@ -78,7 +78,7 @@ module.exports = {
                 return false;
             }
 
-            const blockCells = this.getBlockCellArray(game, block);
+            const blockCells = this.getBlockCells(game, block);
             const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
             
             if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2 
@@ -104,7 +104,7 @@ module.exports = {
         }
 
         const cellBlock = this.getBlockThatCellBelongsTo(game, cell);
-        const blockCellArray = this.getBlockCellArray(game, cellBlock);
+        const blockCellArray = this.getBlockCells(game, cellBlock);
 
         if (_.includes(_.map(blockCellArray, 'value'), number)) {
             return false;
@@ -169,7 +169,7 @@ module.exports = {
         let blockNumbers = [];
 
         _.forEach(game.blocks, block => {
-            const blockCells = this.getBlockCellArray(game, block);
+            const blockCells = this.getBlockCells(game, block);
             blockNumbers = [];
             
             for (let i = 0; i < defs.gameLength; i++) {

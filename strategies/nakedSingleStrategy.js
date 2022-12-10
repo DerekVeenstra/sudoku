@@ -36,7 +36,7 @@ module.exports = {
                     const colNumbers = _(game.cols[j]).map('value').compact().valueOf();
                     
                     const cellBlock = utils.getBlockThatCellBelongsTo(game, cell);
-                    const blockNumbers = _(utils.getBlockCellArray(game, cellBlock)).map('value').compact().valueOf();
+                    const blockNumbers = _(utils.getBlockCells(game, cellBlock)).map('value').compact().valueOf();
                    
                     const allNumbers = _.uniq(_.concat(rowNumbers, colNumbers, blockNumbers));
                     const missingValues = utils.getMissingValues(allNumbers);

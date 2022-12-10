@@ -13,7 +13,7 @@ const allStrategies = [ linearGuessStrategy, finalCompletionStrategy, nakedSingl
 
 
 function main() {
-    const game = GameParser.parseGame(sampleGames.easyGame2);
+    const game = GameParser.parseGame(sampleGames.expertGame2);
 
     console.log(utils.prettyPrintGame(game));
 

@@ -55,7 +55,7 @@ module.exports = {
         const operationLog = [];
 
         _.forEach(game.blocks, block => {
-            const blockCells = utils.getBlockCellArray(game, block);
+            const blockCells = utils.getBlockCells(game, block);
 
             _.forEach(defs.numbers, number => {
                 const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
@@ -89,9 +89,12 @@ module.exports = {
         const secondaryIndex = type === 'row' ? 'colIndex' : 'rowIndex';
         const gameIndex = `${type}s`; // 'rows' or 'cols'
 
+        // If the cells with the note form a row or col
         if (cellsWithNoteNumber[0][primaryIndex] === cellsWithNoteNumber[1][primaryIndex]) {
-            const targetIndex = cellsWithNoteNumber[0][primaryIndex];
+            const targetIndex = cellsWithNoteNumber[0][primaryIndex]; // the index of the row or col formed by the notes
+            // Look at each cell in the row or col to see if if has a note to be cleared
             _.forEach(game[gameIndex][targetIndex], cell => {
+                // Check that the cell to be cleared isn't one that formed the row or col originally
                 if (cell[secondaryIndex] !== cellsWithNoteNumber[0][secondaryIndex] && cell[secondaryIndex] !== cellsWithNoteNumber[1][secondaryIndex]) {
                     if (_.includes(cell.notes, number)) {
                         cell.clearNoteNumber(number);
@@ -111,7 +114,7 @@ module.exports = {
         const operationLog = [];
 
         _.forEach(game.blocks, block => {
-            const blockCells = utils.getBlockCellArray(game, block);
+            const blockCells = utils.getBlockCells(game, block);
             
             _.forEach(defs.numbers, number => {
                 const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));

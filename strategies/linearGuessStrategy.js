@@ -102,7 +102,7 @@ module.exports = {
         rowIndexesWithNumber.push(...utils.getRowColCoveredByNotes(game, block, number, 'row'));
         colIndexesWithNumber.push(...utils.getRowColCoveredByNotes(game, block, number, 'col'));
 
-        const cellArray = utils.getBlockCellArray(game, block);
+        const cellArray = utils.getBlockCells(game, block);
 
         // Remove all cells that are on the row or col of the number from other blocks, or if they already have a value assigned
         _.remove(cellArray, cell => cell.value || _.includes(rowIndexesWithNumber, cell.rowIndex) || _.includes(colIndexesWithNumber, cell.colIndex));
