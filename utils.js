@@ -66,7 +66,8 @@ module.exports = {
 
     /**
      * Return rows or cols that have note pairs for a provided number.
-     * Exclusion block will ignore any note pairs within that block if provided.
+     * Exclusion block will ignore any note pairs within that block if provided, this is important
+     * since note pairs within the block should not be used to exclude potential cells that the number could be in
      */
     getRowColCoveredByNotes : function(game, exclusionBlock, number, type) {
         const primaryIndex = `${type}Index`;
@@ -75,7 +76,7 @@ module.exports = {
         _.forEach(game.blocks, block => {
             // Skip the exclusion block 
             if (_.isEqual(block, exclusionBlock)) {
-                return false;
+                return;
             }
 
             const blockCells = this.getBlockCells(game, block);
@@ -116,7 +117,6 @@ module.exports = {
     /**
      * Ensure that all rows, columns and blocks have unique numbers
      * Returns false if the game is unfinished or if the solution is invalid
-     * TODO: test rows, cols, blocks and unfinished solution failures
      */
     isSolutionValid : function(game) {    
         return this.isCompleteSolution(game) && this.areRowsValid(game) && this.areColsValid(game) && this.areBlocksValid(game);

@@ -156,8 +156,8 @@ describe('strategies', function() {
             const game = GameParser.parseGame(linearGuessBasicCaseGame);
             expect(game.rows[1][1].value).to.equal(null);
             
-            const result = linearGuessStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = linearGuessStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[1][1].value).to.equal('1');
         });
@@ -173,8 +173,8 @@ describe('strategies', function() {
             game.rows[0][3].setNoteNumbers(number);
             game.rows[0][4].setNoteNumbers(number);
 
-            const result = linearGuessStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = linearGuessStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[1][1].value).to.equal('1');
         });
@@ -189,7 +189,7 @@ describe('strategies', function() {
             game.rows[0][1].setNoteNumbers(number);
             game.rows[0][2].setNoteNumbers(number);
 
-            const result = linearGuessStrategy.run(game);
+            linearGuessStrategy.run(game);
 
             expect(game.rows[1][1].value).to.not.equal('1');
         });
@@ -204,8 +204,8 @@ describe('strategies', function() {
             const game = GameParser.parseGame(finalCompletionBasicCaseRowsGame);
             expect(game.rows[0][0].value).to.equal(null);
             
-            const result = finalCompletionStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -219,8 +219,8 @@ describe('strategies', function() {
             expect(game.rows[3][1].value).to.equal('1');
             expect(game.rows[1][3].value).to.equal('1');
             
-            const result = finalCompletionStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -234,8 +234,8 @@ describe('strategies', function() {
             expect(game.rows[3][1].value).to.equal('1');
             expect(game.rows[1][3].value).to.equal('1');
             
-            const result = finalCompletionStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -255,8 +255,8 @@ describe('strategies', function() {
             const game = GameParser.parseGame(finalCompletionBasicCaseColsGame);
             expect(game.rows[0][0].value).to.equal(null);
             
-            const result = finalCompletionStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -270,8 +270,8 @@ describe('strategies', function() {
             const game = GameParser.parseGame(finalCompletionBasicCaseBlocksGame);
             expect(game.rows[0][0].value).to.equal(null);
             
-            const result = finalCompletionStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -284,8 +284,8 @@ describe('strategies', function() {
             expect(game.rows[3][1].value).to.equal('1');
             expect(game.rows[1][3].value).to.equal('1');
             
-            const result = finalCompletionStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -306,8 +306,8 @@ describe('strategies', function() {
             const game = GameParser.parseGame(nakedSingleBasicCaseGame);
             expect(game.rows[0][0].value).to.equal(null);
             
-            const result = nakedSingleStrategy.run(game);
-            expect(result.operationLog.length).to.equal(1);
+            const opLog = nakedSingleStrategy.run(game);
+            expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
         });
@@ -322,8 +322,8 @@ describe('strategies', function() {
                 
                 game.rows[0][0].setNoteNumbers('1');
                 
-                const result = resolveNotesStrategy.run(game);
-                expect(result.operationLog.length).to.equal(1);
+                const opLog = resolveNotesStrategy.run(game);
+                expect(opLog.length).to.equal(1);
     
                 expect(game.rows[0][0].value).to.equal('1');
             });
@@ -364,8 +364,6 @@ describe('strategies', function() {
 
         });
        
-
-
     });
 
 });

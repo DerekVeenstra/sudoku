@@ -138,7 +138,7 @@ describe('utils', function() {
             game.rows[1][7].setNoteNumbers(number);
             game.rows[1][8].setNoteNumbers(number);
 
-            const results = utils.getRowColCoveredByNotes(game, number, 'row');
+            const results = utils.getRowColCoveredByNotes(game, null, number, 'row');
             expect(results).to.eql([ 0, 1 ]);
         });
 
@@ -152,7 +152,7 @@ describe('utils', function() {
             game.rows[7][1].setNoteNumbers(number);
             game.rows[8][1].setNoteNumbers(number);
 
-            const results = utils.getRowColCoveredByNotes(game, number, 'col');
+            const results = utils.getRowColCoveredByNotes(game, null, number, 'col');
             expect(results).to.eql([ 0, 1 ]);
         });
     })
