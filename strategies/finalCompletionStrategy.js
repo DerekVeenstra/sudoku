@@ -11,9 +11,9 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-        let wasValueFoundDuringPass = true;
+        let wasOpLogGeneratedDuringPass = true;
         
-        while(wasValueFoundDuringPass) {
+        while(wasOpLogGeneratedDuringPass) {
             rowsAndColsOperationLog = this.setFinalCompletionForRowsAndCols(game);
             if (!_.isEmpty(rowsAndColsOperationLog)) {
                 operationLog.push(...rowsAndColsOperationLog); 
@@ -24,7 +24,7 @@ module.exports = {
                 operationLog.push(...blocksOperationLog); 
             }
     
-            wasValueFoundDuringPass = !_.isEmpty(rowsAndColsOperationLog) || !_.isEmpty(blocksOperationLog);
+            wasOpLogGeneratedDuringPass = !_.isEmpty(rowsAndColsOperationLog) || !_.isEmpty(blocksOperationLog);
         }
 
         return operationLog;

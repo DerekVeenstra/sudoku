@@ -9,14 +9,14 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-        let wasValueFoundDuringPass = true;
+        let wasOpLogGeneratedDuringPass = true;
         
-        while(wasValueFoundDuringPass) {
+        while(wasOpLogGeneratedDuringPass) {
                 opLogs = this.findNakedSingles(game);
                 if (!_.isEmpty(opLogs)) {
                     operationLog.push(...opLogs); 
                 }
-            wasValueFoundDuringPass = !_.isEmpty(opLogs);
+            wasOpLogGeneratedDuringPass = !_.isEmpty(opLogs);
         }
 
         return operationLog;

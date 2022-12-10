@@ -9,16 +9,16 @@ module.exports = {
      */
      run : function(game) {
         const operationLog = [];
-        let wasValueFoundDuringPass = true;
+        let wasOpLogGeneratedDuringPass = true;
         
-        while(wasValueFoundDuringPass) {
+        while(wasOpLogGeneratedDuringPass) {
             _.forEach(defs.numbers, number => {
                 linearGuessOperationLogs = this.linearGuessForNumber(game, number);
                 if (!_.isEmpty(linearGuessOperationLogs)) {
                     operationLog.push(...linearGuessOperationLogs); 
                 }
             });
-            wasValueFoundDuringPass = !_.isEmpty(linearGuessOperationLogs);
+            wasOpLogGeneratedDuringPass = !_.isEmpty(linearGuessOperationLogs);
         }
 
         return operationLog;
