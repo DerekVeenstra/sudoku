@@ -19,7 +19,7 @@ module.exports = {
             wasValueFoundDuringPass = !_.isEmpty(opLogs);
         }
 
-        return { operationLog };
+        return operationLog;
     },
     
     // For each cell, see if it can only be one number based on the existance of all other possible numbers

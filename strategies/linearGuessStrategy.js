@@ -21,7 +21,7 @@ module.exports = {
             wasValueFoundDuringPass = !_.isEmpty(linearGuessOperationLogs);
         }
 
-        return { operationLog };
+        return operationLog;
     },
     
     /**

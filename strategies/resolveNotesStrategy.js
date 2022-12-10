@@ -24,7 +24,7 @@ module.exports = {
             }
         }
 
-        return { operationLog };
+        return operationLog;
     },
     
     resolveNotes : function(game) {

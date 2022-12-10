@@ -27,7 +27,7 @@ module.exports = {
             wasValueFoundDuringPass = !_.isEmpty(rowsAndColsOperationLog) || !_.isEmpty(blocksOperationLog);
         }
 
-        return { operationLog };
+        return operationLog;
     },
 
     setFinalCompletionForRowsAndCols : function(game) {

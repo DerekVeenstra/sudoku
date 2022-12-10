@@ -36,13 +36,13 @@ function main() {
         wasValueFound = false;
 
         _.forEach(allStrategies, strategy => {
-            const strategyResult = strategy.run(game);
+            const strategyOperationLog = strategy.run(game);
 
-            if (!_.isEmpty(strategyResult.operationLog)) {
-                operationLog.push(...strategyResult.operationLog);
+            if (!_.isEmpty(strategyOperationLog)) {
+                operationLog.push(...strategyOperationLog);
             }
     
-            if (!_.isEmpty(strategyResult.operationLog)) {
+            if (!_.isEmpty(strategyOperationLog)) {
                 wasValueFound = true;
             }
         })
