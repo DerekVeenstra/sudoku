@@ -64,20 +64,9 @@ module.exports = {
         // see if those blocks have rows or columns forcing the number to exist
         // update the operation log and set the new value to the cell if a value is found
         _.forEach(blocksWithoutNumber, block => {
-            let newValues = this.setLinearGuessBlockValues(game, block, number, rowIndexes, colIndexes);
-
-            if (newValues) {
-                if (!_.isArray(newValues)) {
-                    newValues = [ newValues ];
-                }
-
-                operationLogs.push(..._.map(newValues, newValue => {
-                    return `Found a ${number} at row ${newValue.rowIndex}, col ${newValue.colIndex} using linear guess strategy.`;
-                }));
-
-                _.forEach(newValues, newValue => {
-                    game.rows[newValue.rowIndex][newValue.colIndex].setValue(game, number);
-                });
+            let blockOpLog = this.setLinearGuessBlockValues(game, block, number, rowIndexes, colIndexes);
+            if(!_.isEmpty(blockOpLog)) {
+                operationLogs.push(blockOpLog);
             }
         });
 
@@ -87,12 +76,8 @@ module.exports = {
     /**
      * Given rows and columns containing the target number, determine if the block has the given number value in a cell
      * This function uses side effects to set values on Cells when it finds the value or notes
-     * 
-     * @returns undefined if a block value was not able to be found, Cell if a value was found
      */
     setLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
-        const operationLogs = [];
-        
         // Validate that the given number isn't already in the block
         if (utils.doesBlockIncludeNumber(game, block, number)) {
             throw ('Block already contains number');
@@ -113,12 +98,14 @@ module.exports = {
                 cell.setNoteNumbers(number);
 
             });
-            return;
         }
 
         // If there is only one cell left, that value is the number!
         if (cellArray.length === 1) {
-            return cellArray[0];
+            const newValue = cellArray[0];
+            game.rows[newValue.rowIndex][newValue.colIndex].setValue(game, number);
+            
+            return `Found a ${number} at row ${newValue.rowIndex}, col ${newValue.colIndex} using linear guess strategy.`;
         }
     },
 }
