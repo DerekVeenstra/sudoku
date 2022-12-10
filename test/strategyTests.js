@@ -178,6 +178,21 @@ describe('strategies', function() {
 
             expect(game.rows[1][1].value).to.equal('1');
         });
+
+        it.only('should not use note pairs within the block that form rows and cols', function() {
+            const game = GameParser.parseGame(linearGuessNoteCaseGame);
+            const number = '1';
+            
+            game.rows[3][0].setNoteNumbers(number);
+            game.rows[4][0].setNoteNumbers(number);
+
+            game.rows[0][1].setNoteNumbers(number);
+            game.rows[0][2].setNoteNumbers(number);
+
+            const result = linearGuessStrategy.run(game);
+
+            expect(game.rows[1][1].value).to.not.equal('1');
+        });
     });
 
     describe('finalCompletion', function() {

@@ -64,21 +64,27 @@ module.exports = {
         _.forEach([ ...rowCells, ...colCells, ...blockCells ], cell => cell.clearNoteNumber(number));
     },
 
-    getRowColCoveredByNotes : function(game, number, type) {
+    /**
+     * Return rows or cols that have note pairs for a provided number.
+     * Exclusion block will ignore any note pairs within that block if provided.
+     */
+    getRowColCoveredByNotes : function(game, exclusionBlock, number, type) {
         const primaryIndex = `${type}Index`;
         const indexesCoveredByNotes = [];
         
         _.forEach(game.blocks, block => {
-            const blockCells = this.getBlockCellArray(game, block);
+            // Skip the exclusion block 
+            if (_.isEqual(block, exclusionBlock)) {
+                return false;
+            }
 
-            _.forEach(defs.numbers, number => {
-                const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
-                
-                if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2 
-                    && cellsWithNoteNumber[0][primaryIndex] === cellsWithNoteNumber[1][primaryIndex]) {
-                    indexesCoveredByNotes.push(cellsWithNoteNumber[0][primaryIndex]);
-                }
-            });
+            const blockCells = this.getBlockCellArray(game, block);
+            const cellsWithNoteNumber = _.filter(blockCells, cell => _.includes(cell.notes, number));
+            
+            if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2 
+                && cellsWithNoteNumber[0][primaryIndex] === cellsWithNoteNumber[1][primaryIndex]) {
+                indexesCoveredByNotes.push(cellsWithNoteNumber[0][primaryIndex]);
+            }
         });
 
         return indexesCoveredByNotes;

@@ -47,10 +47,6 @@ module.exports = {
             }
         }
 
-        // also add any rows and cols that are covered by notes
-        // rowIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'row'));
-        // colIndexes.push(...utils.getRowColCoveredByNotes(game, number, 'col'));
-
         // get all blocks that don't contain this number
         const blocksWithoutNumber = [];
         _.forEach(game.blocks, block => {
@@ -101,6 +97,10 @@ module.exports = {
         if (utils.doesBlockIncludeNumber(game, block, number)) {
             throw ('Block already contains number');
         }
+
+        // Get row and col indexes that are covered by note pairs external to the block
+        rowIndexesWithNumber.push(...utils.getRowColCoveredByNotes(game, block, number, 'row'));
+        colIndexesWithNumber.push(...utils.getRowColCoveredByNotes(game, block, number, 'col'));
 
         const cellArray = utils.getBlockCellArray(game, block);
 
