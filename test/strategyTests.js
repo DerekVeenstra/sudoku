@@ -179,7 +179,7 @@ describe('strategies', function() {
             expect(game.rows[1][1].value).to.equal('1');
         });
 
-        it.only('should not use note pairs within the block that form rows and cols', function() {
+        it('should not use note pairs within the block that form rows and cols', function() {
             const game = GameParser.parseGame(linearGuessNoteCaseGame);
             const number = '1';
             
