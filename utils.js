@@ -68,8 +68,13 @@ module.exports = {
      * Return rows or cols that have note pairs for a provided number.
      * Exclusion block will ignore any note pairs within that block if provided, this is important
      * since note pairs within the block should not be used to exclude potential cells that the number could be in
+     * @param type is either 'row' or 'col'
      */
     getRowColCoveredByNotes : function(game, exclusionBlock, number, type) {
+        if (!type || (type !== 'row' && type !== 'col')) {
+            throw 'type param either not provided or invalid';
+        }
+        
         const primaryIndex = `${type}Index`;
         const indexesCoveredByNotes = [];
         
@@ -96,19 +101,41 @@ module.exports = {
             throw 'Cell already has a value';
         }
 
+        const cellBlock = this.getBlockThatCellBelongsTo(game, cell);
+
+        // Does the row already contain the number?
         if (_.includes(_.map(game.rows[cell.rowIndex], 'value'), number)) {
             return false;
         }
 
+        // Does the col already contain the number?
         if (_.includes(_.map(game.cols[cell.colIndex], 'value'), number)) {
             return false;
         }
 
-        const cellBlock = this.getBlockThatCellBelongsTo(game, cell);
-        const blockCellArray = this.getBlockCells(game, cellBlock);
+        // Does the row have a note pair with that number?
+        if (_.includes(this.getRowColCoveredByNotes(game, cellBlock, number, 'row'), cell.rowIndex)) {
+            return false;
+        }
 
+        // Does the col have a note pair with that number?
+        if (_.includes(this.getRowColCoveredByNotes(game, cellBlock, number, 'col'), cell.colIndex)) {
+            return false;
+        }
+
+        // Does the block already contain the number?
+        const blockCellArray = this.getBlockCells(game, cellBlock);
         if (_.includes(_.map(blockCellArray, 'value'), number)) {
             return false;
+        }
+
+        // Does the block have a note pair of that number?
+        const cellsWithNoteNumber = _.filter(blockCellArray, cell => _.includes(cell.notes, number));
+        if (!_.isEmpty(cellsWithNoteNumber) && cellsWithNoteNumber.length === 2) {
+            // If the block note numbers are on the cell we're looking at, then that cell is still valid for that number
+            if (!cellsWithNoteNumber[0].isEqualToCell(cell) && !cellsWithNoteNumber[1].isEqualToCell(cell)) {
+                return false;
+            }
         }
 
         return true;

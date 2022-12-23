@@ -90,6 +90,54 @@ describe('utils', function() {
             expect(result).to.be.false;
         });
 
+        // If the top left cell is in a row with a note pair of 1, it can't be a 1
+        it('should return false if the cell is in a row with a note pair of that number', function() {
+            const game = GameParser.parseGame(emptyGame);
+            expect(game.rows[0][0].value).to.equal(null);
+
+            game.rows[0][3].setNoteNumbers('1');
+            game.rows[0][4].setNoteNumbers('1');
+            
+            const result = utils.canCellContainNumber(game, game.rows[0][0], '1');
+            expect(result).to.be.false;
+        });
+
+        // If the top left cell is in a col with a note pair of 1, it can't be a 1
+        it('should return false if the cell is in a col with a note pair of that number', function() {
+            const game = GameParser.parseGame(emptyGame);
+            expect(game.rows[0][0].value).to.equal(null);
+
+            game.rows[3][0].setNoteNumbers('1');
+            game.rows[4][0].setNoteNumbers('1');
+            
+            const result = utils.canCellContainNumber(game, game.rows[0][0], '1');
+            expect(result).to.be.false;
+        });
+
+        // If the top left cell is in a block with a note pair of 1, it can't be a 1
+        it('should return false if the cell is in a block with a note pair of that number', function() {
+            const game = GameParser.parseGame(emptyGame);
+            expect(game.rows[0][0].value).to.equal(null);
+
+            game.rows[1][1].setNoteNumbers('1');
+            game.rows[2][1].setNoteNumbers('1');
+            
+            const result = utils.canCellContainNumber(game, game.rows[0][0], '1');
+            expect(result).to.be.false;
+        });
+
+        // If the top left cell is in a block with a note pair of 1, it CAN be a 1 if the notes are on that cell
+        it('should return true if the cell is in a block with a note pair of that number and the note pair is on the cell in question', function() {
+            const game = GameParser.parseGame(emptyGame);
+            expect(game.rows[0][0].value).to.equal(null);
+
+            game.rows[0][0].setNoteNumbers('1');
+            game.rows[2][1].setNoteNumbers('1');
+            
+            const result = utils.canCellContainNumber(game, game.rows[0][0], '1');
+            expect(result).to.be.true;
+        });
+
         // If the top left cell doesn't have a 1 in its row, col or block, it can be a 1
         it('should return true if the cell is not on a row, col or block with the number', function() {
             const game = GameParser.parseGame(emptyGame);
@@ -98,8 +146,6 @@ describe('utils', function() {
             const result = utils.canCellContainNumber(game, game.rows[0][0], '1');
             expect(result).to.be.true;
         });
-
-
     });
 
     describe('clearNotesForCellValue', function() {
@@ -154,6 +200,17 @@ describe('utils', function() {
 
             const results = utils.getRowColCoveredByNotes(game, null, number, 'col');
             expect(results).to.eql([ 0, 1 ]);
+        });
+
+        it('should require a type parameter as either row or col', function() {
+            const game = GameParser.parseGame(emptyGame);
+            // bind is needed here since 'throw' is expecting a function, not a result
+            expect(utils.getRowColCoveredByNotes.bind(game, null, '1', null)).to.throw();
+            expect(utils.getRowColCoveredByNotes.bind(game, null, '1', 'test')).to.throw();
+        });
+
+        it('should not return row or col indexes within the provided exclusion block', function() {
+
         });
     })
 });

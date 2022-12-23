@@ -114,6 +114,19 @@ const finalCompletionAdvancedCaseBlocksGame =
          
 `;
 
+const finalCompletionNotesGame =
+`
+  3      
+4        
+7 9      
+         
+         
+         
+         
+         
+         
+`;
+
 const nakedSingleBasicCaseGame =
 `
  23 45   
@@ -283,6 +296,24 @@ describe('strategies', function() {
             expect(game.rows[0][0].value).to.equal(null);
             expect(game.rows[3][1].value).to.equal('1');
             expect(game.rows[1][3].value).to.equal('1');
+            
+            const opLog = finalCompletionStrategy.run(game);
+            expect(opLog.length).to.equal(1);
+
+            expect(game.rows[0][0].value).to.equal('1');
+        });
+
+        //  Notes should be able to be used in place of numbers for final completion, in this test we are going to replace
+        // the advanced case for blocks with notes
+        it.only('should solve for the notes case for blocks', function() {
+            const game = GameParser.parseGame(finalCompletionNotesGame);
+            expect(game.rows[0][0].value).to.equal(null);
+
+            game.rows[3][1].setNoteNumbers('1');
+            game.rows[4][1].setNoteNumbers('1');
+
+            game.rows[1][3].setNoteNumbers('1');
+            game.rows[1][4].setNoteNumbers('1');
             
             const opLog = finalCompletionStrategy.run(game);
             expect(opLog.length).to.equal(1);

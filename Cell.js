@@ -40,6 +40,10 @@ class Cell {
 
         utils.clearNotesForCellValue(game, this, value);
     }
+
+    isEqualToCell(cell) {
+        return cell.rowIndex === this.rowIndex && cell.colIndex === this.colIndex;
+    }
 }
 
 module.exports = Cell;
