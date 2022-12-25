@@ -62,17 +62,17 @@ module.exports = {
     parseBlocks : function(rows) {
 
         return [
-            new Block([0, 1, 2], [0, 1, 2], rows),
-            new Block([0, 1, 2], [3, 4, 5], rows),
-            new Block([0, 1, 2], [6, 7, 8], rows),
+            new Block(1, [0, 1, 2], [0, 1, 2], rows),
+            new Block(2, [0, 1, 2], [3, 4, 5], rows),
+            new Block(3, [0, 1, 2], [6, 7, 8], rows),
             
-            new Block([3, 4, 5], [0, 1, 2], rows),
-            new Block([3, 4, 5], [3, 4, 5], rows),
-            new Block([3, 4, 5], [6, 7, 8], rows),
+            new Block(4, [3, 4, 5], [0, 1, 2], rows),
+            new Block(5, [3, 4, 5], [3, 4, 5], rows),
+            new Block(6, [3, 4, 5], [6, 7, 8], rows),
 
-            new Block([6, 7, 8], [0, 1, 2], rows),
-            new Block([6, 7, 8], [3, 4, 5], rows),
-            new Block([6, 7, 8], [6, 7, 8], rows),
+            new Block(7, [6, 7, 8], [0, 1, 2], rows),
+            new Block(8, [6, 7, 8], [3, 4, 5], rows),
+            new Block(9, [6, 7, 8], [6, 7, 8], rows),
         ];
     }
 }

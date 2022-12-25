@@ -80,7 +80,7 @@ module.exports = {
         
         _.forEach(game.blocks, block => {
             // Skip the exclusion block 
-            if (_.isEqual(block, exclusionBlock)) {
+            if (block.isEqualToBlock(exclusionBlock)) {
                 return;
             }
 

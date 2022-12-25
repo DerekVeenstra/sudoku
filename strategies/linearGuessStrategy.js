@@ -64,9 +64,10 @@ module.exports = {
         // see if those blocks have rows or columns forcing the number to exist
         // update the operation log and set the new value to the cell if a value is found
         _.forEach(blocksWithoutNumber, block => {
-            let blockOpLog = this.setLinearGuessBlockValues(game, block, number, rowIndexes, colIndexes);
+            // cloning index variables here since operatintg on them in the function would change it for each block
+            let blockOpLog = this.setLinearGuessBlockValues(game, block, number, _.clone(rowIndexes), _.clone(colIndexes));
             if(!_.isEmpty(blockOpLog)) {
-                operationLogs.push(blockOpLog);
+                operationLogs.push(...blockOpLog);
             }
         });
 
@@ -78,6 +79,8 @@ module.exports = {
      * This function uses side effects to set values on Cells when it finds the value or notes
      */
     setLinearGuessBlockValues : function(game, block, number, rowIndexesWithNumber, colIndexesWithNumber) {
+        const operationLogs = [];
+        
         // Validate that the given number isn't already in the block
         if (utils.doesBlockIncludeNumber(game, block, number)) {
             throw ('Block already contains number');
@@ -95,8 +98,10 @@ module.exports = {
         // If there are only two cells left, add notes
         if (cellArray.length === 2) {
             _.forEach(cellArray, cell => {
-                cell.setNoteNumbers(number);
-
+                if (!cell.hasNoteNumber(number)) {
+                    cell.setNoteNumbers(number);
+                    operationLogs.push(`Set a note for ${number} at row ${cell.rowIndex}, col ${cell.colIndex} using linear guess strategy.`);
+                }
             });
         }
 
@@ -105,7 +110,9 @@ module.exports = {
             const newValue = cellArray[0];
             game.rows[newValue.rowIndex][newValue.colIndex].setValue(game, number);
             
-            return `Found a ${number} at row ${newValue.rowIndex}, col ${newValue.colIndex} using linear guess strategy.`;
+            operationLogs.push(`Found a ${number} at row ${newValue.rowIndex}, col ${newValue.colIndex} using linear guess strategy.`);
         }
+
+        return operationLogs;
     },
 }

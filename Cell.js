@@ -30,6 +30,10 @@ class Cell {
         });
     }
 
+    hasNoteNumber(number) {
+        return _.includes(this.notes, number);
+    }
+
     clearNoteNumber(number) {
         _.pull(this.notes, number);
     }

@@ -305,7 +305,7 @@ describe('strategies', function() {
 
         //  Notes should be able to be used in place of numbers for final completion, in this test we are going to replace
         // the advanced case for blocks with notes
-        it.only('should solve for the notes case for blocks', function() {
+        it('should solve for the notes case for blocks', function() {
             const game = GameParser.parseGame(finalCompletionNotesGame);
             expect(game.rows[0][0].value).to.equal(null);
 
@@ -319,6 +319,10 @@ describe('strategies', function() {
             expect(opLog.length).to.equal(1);
 
             expect(game.rows[0][0].value).to.equal('1');
+        });
+
+        it('should add notes for rows and cols if there are two possible cells in the same block', function() {
+
         });
     });
 

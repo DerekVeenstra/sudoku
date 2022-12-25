@@ -9,3 +9,6 @@ TODO List
 - remove "advancced" wording around final completion tests
 - Do row / col tests for final competion with notes?
 - finish should not return row or col indexes within the provided exclusion block test
+- finish should add notes for rows and cols if there are two possible cells in the same block test
+- the TODO for adding notes to final completion blocks
+- unify opLog, operationLog and operationLogs

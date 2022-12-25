@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const defs = require('../defs');
+const { getRowColCoveredByNotes, getBlockThatCellBelongsTo } = require('../utils');
 const utils = require('../utils');
 
 module.exports = {
@@ -43,6 +44,22 @@ module.exports = {
                 _.forEach(missingValues, missingValue => {
                     let validCells = _.filter(game[operationType][i], cell => !cell.value && utils.canCellContainNumber(game, cell, missingValue));
 
+                    // If the number is isolated to two cells within one block, add notes
+                    if (validCells.length === 2) {
+                        // Check that the two cells are in the same block
+                        const cellBlock0 = utils.getBlockThatCellBelongsTo(game, validCells[0]);
+
+                        const cellBlock1 = utils.getBlockThatCellBelongsTo(game, validCells[1]);
+                        if (cellBlock0.isEqualToBlock(cellBlock1)) {
+                            _.forEach(validCells, cell => {
+                                if (!cell.hasNoteNumber(missingValue)) {
+                                    cell.setNoteNumbers(missingValue);
+                                    operationLog.push(`Set a note for ${missingValue} at row ${cell.rowIndex}, col ${cell.colIndex} using final completion strategy.`);
+                                }
+                            });
+                        }
+                    }
+
                     // If the number is isolated to a single cell in the row or col, that cell must contain that value
                     if (validCells.length === 1) {
                         validCells = validCells[0];
@@ -58,7 +75,7 @@ module.exports = {
 
     /**
      * 
-     * TODO: Add notes when othere are only two values left in the block
+     * TODO: Add notes when there are only two values left in the block
      */
     setFinalCompletionForBlocks : function(game) {
         const operationLog = [];
